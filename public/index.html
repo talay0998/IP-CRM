@@ -1,0 +1,1850 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IP-CRM · 知识产权代理管理</title>
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --bg-glow-1: rgba(0,113,227,.10);
+    --bg-glow-2: rgba(120,80,255,.08);
+    --surface: #ffffff;
+    --surface2: rgba(255,255,255,.70);
+    --glass: rgba(255,255,255,.60);
+    --text: #1d1d1f;
+    --text2: #6e6e73;
+    --text3: #a1a1a6;
+    --border: rgba(0,0,0,.08);
+    --border2: rgba(0,0,0,.05);
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-soft: rgba(0,113,227,.10);
+    --danger: #ff3b30;
+    --danger-soft: rgba(255,59,48,.10);
+    --warn: #ff9f0a;
+    --warn-soft: rgba(255,159,10,.14);
+    --ok: #34c759;
+    --ok-soft: rgba(52,199,89,.14);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.05), 0 16px 44px rgba(0,0,0,.08);
+    --shadow-lg: 0 8px 20px rgba(0,0,0,.10), 0 24px 64px rgba(0,0,0,.14);
+    --r-lg: 18px;
+    --r-md: 12px;
+    --r-pill: 980px;
+    --spring: cubic-bezier(0.32,0.72,0,1);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --bg-glow-1: rgba(0,113,227,.18);
+      --bg-glow-2: rgba(120,80,255,.12);
+      --surface: #1c1c1e;
+      --surface2: rgba(28,28,30,.72);
+      --glass: rgba(30,30,32,.66);
+      --text: #f5f5f7;
+      --text2: #98989d;
+      --text3: #636366;
+      --border: rgba(255,255,255,.12);
+      --border2: rgba(255,255,255,.06);
+      --accent-soft: rgba(10,132,255,.16);
+      --danger-soft: rgba(255,69,58,.16);
+      --warn-soft: rgba(255,159,10,.18);
+      --ok-soft: rgba(48,209,88,.16);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+      --shadow-md: 0 2px 10px rgba(0,0,0,.5), 0 18px 48px rgba(0,0,0,.55);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font: 15px/1.5 var(--font);
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(42rem 30rem at 12% -6%, var(--bg-glow-1), transparent 60%),
+      radial-gradient(38rem 28rem at 92% 4%, var(--bg-glow-2), transparent 62%),
+      var(--bg);
+  }
+  input, select, textarea, button { font: inherit; color: inherit; }
+  ::placeholder { color: var(--text3); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button { cursor: pointer; }
+
+  /* ---------- 按钮 ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; justify-content: center;
+    border: 0; border-radius: var(--r-pill);
+    padding: 9px 18px; font-weight: 500; font-size: 14px;
+    background: var(--surface); color: var(--text);
+    box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--border);
+    transition: transform .12s ease-out, background .2s ease, box-shadow .2s ease, opacity .2s ease;
+    white-space: nowrap;
+  }
+  .btn:hover { box-shadow: var(--shadow-md), inset 0 0 0 1px var(--border); }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .5; cursor: default; transform: none; }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: none; }
+  .btn-primary:hover { background: var(--accent-hover); box-shadow: var(--shadow-md); }
+  .btn-ghost { background: var(--accent-soft); color: var(--accent); box-shadow: none; }
+  .btn-ghost:hover { background: rgba(0,113,227,.16); }
+  .btn-danger { background: var(--danger-soft); color: var(--danger); box-shadow: none; }
+  .btn-danger:hover { background: rgba(255,59,48,.18); }
+  .btn-sm { padding: 5px 12px; font-size: 13px; }
+  .btn-block { width: 100%; }
+  .icon-btn {
+    border: 0; background: transparent; color: var(--text2); border-radius: var(--r-pill);
+    width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
+    transition: background .2s, color .2s, transform .12s;
+  }
+  .icon-btn:hover { background: var(--border2); color: var(--text); }
+  .icon-btn:active { transform: scale(.92); }
+  .icon-btn svg { width: 19px; height: 19px; }
+
+  /* ---------- 徽章 ---------- */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 10px; border-radius: var(--r-pill);
+    font-size: 12px; font-weight: 600; line-height: 1.6;
+    background: var(--border2); color: var(--text2);
+    letter-spacing: .01em;
+  }
+  .b-tm { background: var(--accent-soft); color: var(--accent); }
+  .b-cp { background: var(--warn-soft); color: var(--warn); }
+  .b-sc { background: var(--ok-soft); color: var(--ok); }
+  .b-lc { background: #5e5ce6; color: #fff; }
+  .b-rg { background: #ff9f0a; color: #fff; }
+  .b-sw { background: #ff3b30; color: #fff; }
+  .b-sv { background: #00c7be; color: #fff; }
+  .b-active { background: var(--accent-soft); color: var(--accent); }
+  .b-completed { background: var(--ok-soft); color: var(--ok); }
+  .b-terminated { background: var(--danger-soft); color: var(--danger); }
+  .b-paid { background: var(--ok-soft); color: var(--ok); }
+  .b-partial { background: var(--warn-soft); color: var(--warn); }
+  .b-unpaid { background: var(--border2); color: var(--text3); }
+  .b-overdue { background: var(--danger-soft); color: var(--danger); }
+  .b-pending { background: var(--warn-soft); color: var(--warn); }
+  .b-done { background: var(--ok-soft); color: var(--ok); }
+  .b-company { background: var(--accent-soft); color: var(--accent); }
+  .b-sole { background: var(--warn-soft); color: var(--warn); }
+  .b-individual { background: var(--ok-soft); color: var(--ok); }
+  .b-org { background: var(--border2); color: var(--text3); }
+
+  /* ---------- 登录页 ---------- */
+  #login-view {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .login-card {
+    width: 100%; max-width: 384px;
+    background: var(--glass);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border-radius: 24px; padding: 40px 36px 34px;
+    box-shadow: var(--shadow-lg), inset 0 0 0 1px var(--border);
+    animation: rise .5s var(--spring);
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .logo-mark {
+    width: 52px; height: 52px; border-radius: 14px; margin-bottom: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: #fff; letter-spacing: .02em;
+    background: linear-gradient(135deg, #0a84ff, #5e5ce6 70%, #bf5af2);
+    box-shadow: 0 8px 20px rgba(10,132,255,.35);
+  }
+  .login-card h1 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .login-card .sub { margin: 6px 0 28px; color: var(--text2); font-size: 14px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%; border: 0; border-radius: var(--r-md);
+    padding: 10px 14px; font-size: 15px;
+    background: var(--surface); color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--border);
+    transition: box-shadow .2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; box-shadow: inset 0 0 0 2px var(--accent);
+  }
+  .field textarea { resize: vertical; min-height: 72px; }
+  .error-msg { display: none; color: var(--danger); font-size: 13px; margin: 4px 0 10px; }
+  .hint { margin-top: 18px; text-align: center; color: var(--text3); font-size: 12px; }
+
+  /* ---------- 后台布局 ---------- */
+  #app-view { display: none; min-height: 100vh; }
+  .app-shell { display: grid; grid-template-columns: 236px 1fr; min-height: 100vh; }
+  .sidebar {
+    position: sticky; top: 0; height: 100vh;
+    display: flex; flex-direction: column;
+    background: var(--surface2);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    border-right: 1px solid var(--border);
+    padding: 18px 14px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 6px 10px 18px; }
+  .brand .logo-mark { width: 34px; height: 34px; border-radius: 9px; font-size: 15px; margin: 0; box-shadow: 0 4px 12px rgba(10,132,255,.3); }
+  .brand b { font-size: 16px; font-weight: 650; letter-spacing: -.01em; }
+  .side-nav { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; border: 0; background: transparent;
+    padding: 11px 14px; border-radius: var(--r-md);
+    color: var(--text2); font-size: 14.5px; font-weight: 500; text-align: left;
+    transition: background .2s ease, color .2s ease, transform .12s ease-out;
+  }
+  .nav-item svg { width: 19px; height: 19px; flex: none; }
+  .nav-item:hover { background: var(--border2); color: var(--text); }
+  .nav-item:active { transform: scale(.98); }
+  .nav-item.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .nav-sep { height: 1px; background: var(--border); margin: 8px 6px; }
+  .side-foot { border-top: 1px solid var(--border); padding-top: 12px; }
+
+  .main-col { display: flex; flex-direction: column; min-width: 0; }
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; gap: 14px;
+    height: 60px; padding: 0 28px;
+    background: var(--glass);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+  }
+  .burger { display: none; }
+  .crumb { font-size: 15px; font-weight: 600; letter-spacing: -.01em; flex: 1; }
+  .crumb small { color: var(--text3); font-weight: 500; margin-right: 8px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .user { font-size: 13.5px; color: var(--text2); font-weight: 500; }
+  .user b { color: var(--text); font-weight: 600; }
+
+  .view-content { padding: 28px; max-width: 1180px; width: 100%; margin: 0 auto; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+  .page-head h1 { font-size: 28px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
+  .page-head p { color: var(--text2); font-size: 13.5px; margin-top: 4px; }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .toolbar input, .toolbar select {
+    border: 0; border-radius: var(--r-pill);
+    padding: 9px 16px; font-size: 14px;
+    background: var(--surface); color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  .toolbar input { flex: 1; min-width: 200px; }
+  .toolbar select { min-width: 132px; }
+  .toolbar input:focus, .toolbar select:focus { outline: none; box-shadow: inset 0 0 0 2px var(--accent); }
+
+  .empty {
+    text-align: center; color: var(--text3); padding: 52px 16px; font-size: 14px;
+  }
+  .empty::before { content: "↕"; display: block; font-size: 26px; margin-bottom: 10px; opacity: .5; }
+
+  /* ---------- 卡片 ---------- */
+  .card {
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--border2);
+    overflow: hidden;
+  }
+  .card-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+    gap: 16px;
+  }
+  .card-item {
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--border2);
+    transition: transform .18s var(--spring), box-shadow .25s ease;
+    animation: rise .4s var(--spring) backwards;
+  }
+  .card-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md), inset 0 0 0 1px var(--border2); }
+  .card-item.clickable { cursor: pointer; }
+  .card-item.clickable:active { transform: scale(.985); }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .avatar {
+    width: 42px; height: 42px; flex: none; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: #fff;
+    background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+  }
+  .card-head .tt { flex: 1; min-width: 0; }
+  .card-head .tt b { font-size: 15px; font-weight: 650; letter-spacing: -.01em; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-head .tt span { font-size: 12.5px; color: var(--text3); }
+  .card-body { color: var(--text2); font-size: 13.5px; }
+  .card-body .kv { display: flex; gap: 6px; margin: 5px 0; }
+  .card-body .kv .k { color: var(--text3); width: 56px; flex: none; }
+  .card-body .kv .v { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .card-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border2); }
+
+  /* ---------- 看板 ---------- */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .stat {
+    background: var(--surface);
+    border-radius: var(--r-lg); padding: 18px 20px;
+    box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--border2);
+    animation: rise .4s var(--spring) backwards;
+  }
+  .stat .label { font-size: 12.5px; color: var(--text3); font-weight: 500; }
+  .stat .value { font-size: 27px; font-weight: 700; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 960px) { .dash-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border-radius: var(--r-lg); padding: 20px; box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--border2); }
+  .panel h3 { font-size: 15px; font-weight: 650; letter-spacing: -.01em; margin-bottom: 14px; }
+  .list-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: var(--r-md);
+    transition: background .2s ease;
+  }
+  .list-row:hover { background: var(--border2); }
+  .list-row.clickable { cursor: pointer; }
+  .list-row .t { font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .list-row .t span.ttl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .list-row .s { color: var(--text3); font-size: 12.5px; margin-top: 2px; }
+  .list-row .grow { flex: 1; min-width: 0; }
+
+  /* ---------- 期限列表卡片 ---------- */
+  .dl-card { display: flex; align-items: center; gap: 14px; }
+  .dl-due { flex: none; text-align: center; min-width: 58px; }
+  .dl-due b { display: block; font-size: 18px; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .dl-due span { font-size: 11.5px; color: var(--text3); }
+  .dl-due.overdue b { color: var(--danger); }
+
+  /* ---------- 表格（备用，暂用于无） ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text3); padding: 12px 16px; border-bottom: 1px solid var(--border2); }
+  td { padding: 13px 16px; border-bottom: 1px solid var(--border2); color: var(--text); }
+  tr:last-child td { border-bottom: 0; }
+
+  /* ---------- 抽屉 ---------- */
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 60;
+    width: min(560px, 94vw);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(102%);
+    transition: transform .42s var(--spring);
+    display: flex; flex-direction: column;
+  }
+  .drawer.show { transform: none; }
+  .drawer header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 18px 24px; border-bottom: 1px solid var(--border2);
+    background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    position: sticky; top: 0;
+  }
+  .drawer header .dt { font-size: 17px; font-weight: 650; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .drawer .body { padding: 22px 24px; overflow-y: auto; flex: 1; }
+  .drawer-overlay {
+    position: fixed; inset: 0; z-index: 55; background: rgba(0,0,0,.32);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  }
+  .drawer-overlay.show { opacity: 1; pointer-events: auto; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; margin-bottom: 22px; }
+  .kv .k { font-size: 12px; color: var(--text3); margin-bottom: 3px; }
+  .kv .v { font-size: 14px; font-weight: 500; word-break: break-word; }
+  .tabs { display: flex; gap: 4px; background: var(--border2); border-radius: var(--r-md); padding: 4px; margin-bottom: 18px; }
+  .tabs button {
+    flex: 1; border: 0; background: transparent; border-radius: 10px;
+    padding: 8px 6px; font-size: 13.5px; font-weight: 500; color: var(--text2);
+    transition: background .2s, color .2s;
+  }
+  .tabs button.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+  .fee-row {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    padding: 14px; border-radius: var(--r-md);
+    box-shadow: inset 0 0 0 1px var(--border2); margin-bottom: 10px;
+  }
+  .fee-row .main { flex: 1; min-width: 0; }
+  .fee-row .main .amounts { color: var(--text3); font-size: 12.5px; margin-top: 5px; }
+  .fee-row .actions { display: flex; gap: 6px; flex: none; }
+  .timeline { position: relative; padding-left: 20px; }
+  .timeline::before { content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px; background: var(--border2); }
+  .tl-item { position: relative; padding: 0 0 20px 12px; }
+  .tl-item::before {
+    content: ""; position: absolute; left: -20px; top: 6px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .tl-item .stage { font-weight: 600; font-size: 14px; }
+  .tl-item .meta { font-size: 12px; color: var(--text3); margin: 2px 0 6px; }
+  .tl-item .content { font-size: 13.5px; color: var(--text2); white-space: pre-wrap; }
+
+  /* ---------- 弹窗 ---------- */
+  .overlay {
+    position: fixed; inset: 0; z-index: 70;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    background: rgba(0,0,0,.34);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    opacity: 0; pointer-events: none; transition: opacity .28s ease;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .modal {
+    width: 100%; max-width: 480px; max-height: 88vh; overflow-y: auto;
+    background: var(--surface);
+    border-radius: 20px; padding: 26px;
+    box-shadow: var(--shadow-lg), inset 0 0 0 1px var(--border);
+    transform: translateY(10px) scale(.98);
+    transition: transform .32s var(--spring);
+  }
+  .overlay.show .modal { transform: none; }
+  .modal h2 { font-size: 19px; font-weight: 650; letter-spacing: -.01em; margin-bottom: 18px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+  /* ---------- Toast ---------- */
+  #toast { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 90; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .toast-item {
+    padding: 10px 20px; border-radius: var(--r-pill);
+    font-size: 13.5px; font-weight: 500;
+    background: var(--surface2);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: var(--shadow-md), inset 0 0 0 1px var(--border);
+    animation: toast-in .32s var(--spring);
+  }
+  .toast-item.ok { color: var(--ok); }
+  .toast-item.error { color: var(--danger); }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- 扩展页面样式 ---------- */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .tbl th { text-align: left; color: var(--text3); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--border2); }
+  .tbl td { padding: 10px; border-bottom: 1px solid var(--border2); }
+  .tbl tr.row:hover td { background: var(--border2); }
+  .tbl tr.row { cursor: pointer; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 180px; padding-top: 12px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; min-width: 0; }
+  .bar-wrap { flex: 1; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; }
+  .bar { width: 100%; max-width: 30px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 55%, transparent)); min-height: 2px; }
+  .bar.rec { background: linear-gradient(180deg, var(--ok), color-mix(in srgb, var(--ok) 55%, transparent)); }
+  .bar-col .lb { font-size: 11.5px; color: var(--text3); flex: none; }
+  .legend { display: flex; gap: 16px; font-size: 12px; color: var(--text3); margin-top: 10px; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .prog-row { display: flex; align-items: center; gap: 10px; margin: 9px 0; }
+  .prog-row .lbl { width: 72px; font-size: 13px; color: var(--text3); flex: none; }
+  .prog-track { flex: 1; height: 8px; border-radius: 5px; background: var(--border2); overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 5px; background: var(--accent); }
+  .prog-val { width: 76px; text-align: right; font-size: 13px; font-weight: 600; flex: none; }
+  .set-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 920px) { .set-grid { grid-template-columns: 1fr; } }
+  .small-hint { font-size: 12px; color: var(--text3); margin-top: 6px; }
+  .dl-cell { font-size: 12.5px; color: var(--text3); font-weight: 500; }
+  .list-col { display: flex; flex-direction: column; }
+  .switch-label { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text2); cursor: pointer; }
+  .switch-label input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+  /* ---------- 响应式 ---------- */
+  .scrim { display: none; }
+  @media (max-width: 920px) {
+    .app-shell { grid-template-columns: 1fr; }
+    .sidebar { position: fixed; left: 0; top: 0; z-index: 50; width: 264px; transform: translateX(-102%); transition: transform .38s var(--spring); box-shadow: var(--shadow-lg); }
+    .sidebar.show { transform: none; }
+    .scrim { display: block; position: fixed; inset: 0; z-index: 45; background: rgba(0,0,0,.32); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .scrim.show { opacity: 1; pointer-events: auto; }
+    .burger { display: inline-flex; }
+    .view-content { padding: 20px 16px; }
+    .topbar { padding: 0 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+    .drawer, .modal, .overlay, .sidebar { transition: opacity .2s ease; }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .sidebar, .topbar, .login-card, .toast-item, .drawer header { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  }
+</style>
+</head>
+<body>
+  <!-- 登录视图 -->
+  <div id="login-view">
+    <form class="login-card" id="login-form">
+      <div class="logo-mark">IP</div>
+      <h1>IP-CRM</h1>
+      <p class="sub">知识产权代理管理系统</p>
+      <div class="field"><label for="username">账号</label><input id="username" name="username" autocomplete="username" required /></div>
+      <div class="field"><label for="password">密码</label><input id="password" name="password" type="password" autocomplete="current-password" required /></div>
+      <div class="error-msg" id="login-error"></div>
+      <button class="btn btn-primary btn-block" id="login-btn" type="submit">登 录</button>
+      <div class="hint">默认账号 alimjan</div>
+    </form>
+  </div>
+
+  <!-- 后台视图 -->
+  <div id="app-view">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand"><div class="logo-mark">IP</div><b>IP-CRM</b></div>
+        <nav class="side-nav">
+          <button class="nav-item active" data-view="dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+            看板
+          </button>
+          <button class="nav-item" data-view="customers">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16.5 15.2c2.6.3 4.6 1.9 5 4.8"/></svg>
+            客户
+          </button>
+          <button class="nav-item" data-view="cases">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+            案件
+          </button>
+          <button class="nav-item" data-view="deadlines">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.8"/></svg>
+            期限提醒
+          </button>
+          <div class="nav-sep"></div>
+          <button class="nav-item" data-view="finance">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5.5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            财务管理
+          </button>
+          <button class="nav-item" data-view="stats">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M8 17v-5M13 17V7M18 17v-3"/></svg>
+            业务统计
+          </button>
+          <button class="nav-item" data-view="leads">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+            销售线索
+          </button>
+          <button class="nav-item" data-view="logs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+            操作日志
+          </button>
+          <button class="nav-item" data-view="company">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V7l6-4 6 4v14M10 9h4M10 13h4M10 17h4"/></svg>
+            公司信息
+          </button>
+          <button class="nav-item" data-view="settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            系统管理
+          </button>
+        </nav>
+        <div class="side-foot">
+          <button class="nav-item" id="logout-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+            退出登录
+          </button>
+        </div>
+      </aside>
+      <div class="scrim" id="side-scrim"></div>
+
+      <div class="main-col">
+        <header class="topbar">
+          <button class="icon-btn burger" id="burger-btn" aria-label="菜单">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+          <div class="crumb"><small id="crumb-sub">知识产权代理</small><span id="crumb-title">看板</span></div>
+          <div class="topbar-right"><span class="user">你好，<b id="me-label"></b></span></div>
+        </header>
+        <main id="view-dashboard" class="view"><div class="view-content"></div></main>
+        <main id="view-customers" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-cases" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-deadlines" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-finance" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-stats" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-logs" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-settings" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-leads" class="view" style="display:none"><div class="view-content"></div></main>
+        <main id="view-company" class="view" style="display:none"><div class="view-content"></div></main>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗与抽屉容器 -->
+  <div class="overlay" id="modal-overlay">
+    <div class="modal" id="modal-box"></div>
+  </div>
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="drawer" id="drawer"><header><span class="dt" id="drawer-title"></span><button class="btn btn-ghost btn-sm" id="drawer-close">关闭</button></header><div class="body" id="drawer-body"></div></aside>
+  <div id="toast"></div>
+
+  <script>
+    "use strict";
+    // ---------- 常量 ----------
+    const CASE_TYPES = { trademark: "商标代理", copyright: "版权代理", "software-copyright": "软件著作权", "legal-consult": "法律咨询", registration: "注册登记", software: "软件开发", service: "数据服务" };
+    const CATEGORIES = {
+      trademark: ["注册申请","驳回复审","异议","无效宣告","续展","变更","转让"],
+      copyright: ["作品登记","变更","撤销"],
+      "software-copyright": ["软件著作权登记","变更","补发证书"],
+      "legal-consult": ["一般咨询","合同审查","法律意见","侵权分析","非诉代理"],
+      registration: ["公司设立","公司变更","个体户注册","注销","年报"],
+      software: ["项目开发","软件销售","定制开发","系统集成"],
+      service: ["数据服务","信息系统运维","云计算服务","网络安全服务"],
+    };
+    const TYPE_BADGE = { trademark: "b-tm", copyright: "b-cp", "software-copyright": "b-sc", "legal-consult": "b-lc", registration: "b-rg", software: "b-sw", service: "b-sv" };
+    const LEAD_STATUS_LABEL = { new: "新线索", contacted: "已联系", qualified: "有意向", negotiating: "洽谈中", won: "已成交", lost: "已流失" };
+    const LEAD_SOURCE_LABEL = { referral: "转介绍", website: "官网咨询", ad: "广告投放", "cold-call": "主动联系", "walk-in": "上门", other: "其他" };
+    const LEAD_SOURCE_BADGE = { referral: "b-tm", website: "b-cp", ad: "b-sw", "cold-call": "b-lc", "walk-in": "b-rg", other: "b-sv" };
+    const STATUS_LABEL = { active: "进行中", completed: "已完成", terminated: "已终止" };
+    const FEE_KIND_LABEL = { official: "官费", agency: "代理费" };
+    const FEE_STATUS_LABEL = { unpaid: "未收", partial: "部分", paid: "已收" };
+    const DL_TYPE_LABEL = { renewal: "续展提醒", official_reply: "官方答复", fee: "费用缴纳" };
+    const CUST_KIND_LABEL = { individual: "个人", sole: "个体户", company: "公司", org: "其他组织" };
+    const CUST_KIND_ID_LABEL = { individual: "身份证号", sole: "营业执照注册号", company: "统一社会信用代码", org: "统一社会信用代码" };
+    const CUST_KIND_BADGE = { individual: "b-individual", sole: "b-sole", company: "b-company", org: "b-org" };
+    const VIEW_TITLE = { dashboard: "管理面板", customers: "客户管理", cases: "业务管理", deadlines: "期限提醒", finance: "财务管理", stats: "业务统计", logs: "操作日志", settings: "系统管理", leads: "销售线索", company: "公司信息" };
+
+    // ---------- 工具 ----------
+    const $ = (s, el) => (el || document).querySelector(s);
+    const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+    const yuan = (cents) => ((cents ?? 0) / 100).toFixed(2);
+    const yuanInput = (cents) => yuan(cents).replace(/\.00$/, "");
+    const toCents = (str) => { const n = Number(str); return Number.isFinite(n) ? Math.round(n * 100) : NaN; };
+    const fmtDate = (iso) => iso || "";
+    const today = () => new Date().toISOString().slice(0, 10);
+    const initials = (s) => { const t = String(s || "").trim(); return t ? t.slice(0, 1).toUpperCase() : "?"; };
+
+    async function api(path, opts = {}) {
+      const res = await fetch(path, {
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
+        ...opts,
+      });
+      if (res.status === 401) { location.reload(); throw new Error("会话已过期"); }
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error((data && data.error) || "请求失败");
+      return data;
+    }
+    function toast(msg, kind = "") {
+      const el = document.createElement("div");
+      el.className = "toast-item " + kind;
+      el.textContent = msg;
+      $("#toast").appendChild(el);
+      setTimeout(() => el.remove(), 2600);
+    }
+    function openModal(html) {
+      $("#modal-box").innerHTML = html;
+      $("#modal-overlay").classList.add("show");
+    }
+    async function download(path) {
+      const res = await fetch(path, { credentials: "same-origin" });
+      if (!res.ok) { let msg = "下载失败"; try { msg = (await res.json()).error || msg; } catch (_) {} toast(msg, "error"); return; }
+      const cd = res.headers.get("Content-Disposition") || "";
+      const m = cd.match(/filename="?([^";]+)"?/);
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(await res.blob());
+      a.download = m ? m[1] : "download";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    }
+    function closeModal() { $("#modal-overlay").classList.remove("show"); }
+    $("#modal-overlay").addEventListener("click", (e) => { if (e.target === $("#modal-overlay")) closeModal(); });
+
+    // ---------- 登录 ----------
+    function showApp(username) {
+      $("#login-view").style.display = "none";
+      $("#app-view").style.display = "block";
+      $("#me-label").textContent = username;
+    }
+    $("#login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = $("#login-error");
+      err.style.display = "none";
+      const btn = $("#login-btn");
+      btn.disabled = true;
+      try {
+        await api("/api/login", {
+          method: "POST",
+          body: JSON.stringify({ username: $("#username").value, password: $("#password").value }),
+        });
+        showApp($("#username").value);
+        setView("dashboard");
+      } catch (ex) { err.textContent = ex.message || "登录失败"; err.style.display = "block"; }
+      finally { btn.disabled = false; }
+    });
+    $("#logout-btn").addEventListener("click", async () => {
+      try { await api("/api/logout", { method: "POST" }); } catch (_) {}
+      location.reload();
+    });
+
+    // ---------- 导航 ----------
+    let currentView = "dashboard";
+    const loaders = { dashboard: loadDashboard, customers: loadCustomers, cases: loadCases, deadlines: loadDeadlines, finance: loadFinance, stats: loadStats, logs: loadLogs, settings: loadSettings, leads: loadLeads, company: loadCompany };
+    function setView(name) {
+      currentView = name;
+      $$(".nav-item[data-view]").forEach((b) => b.classList.toggle("active", b.dataset.view === name));
+      $$("main.view").forEach((v) => (v.style.display = "none"));
+      const view = $("#view-" + name);
+      view.style.display = "block";
+      $("#crumb-title").textContent = VIEW_TITLE[name] || name;
+      closeSidebar();
+      loaders[name]();
+    }
+    $$(".nav-item[data-view]").forEach((btn) => btn.addEventListener("click", () => setView(btn.dataset.view)));
+
+    // ---------- 移动端侧边栏 ----------
+    const sidebar = $("#sidebar");
+    function openSidebar() { sidebar.classList.add("show"); $("#side-scrim").classList.add("show"); }
+    function closeSidebar() { sidebar.classList.remove("show"); $("#side-scrim").classList.remove("show"); }
+    $("#burger-btn").addEventListener("click", openSidebar);
+    $("#side-scrim").addEventListener("click", closeSidebar);
+
+    // ---------- 看板 ----------
+    async function loadDashboard() {
+      const el = $("#view-dashboard .view-content");
+      let dash;
+      try { dash = await api("/api/dashboard"); }
+      catch (ex) { el.innerHTML = `<div class="empty">${esc(ex.message)}</div>`; return; }
+      const cc = dash.caseCounts, ft = dash.feeTotals;
+      const stat = (label, value, color = "") => `<div class="stat"><div class="label">${label}</div><div class="value" style="${color}">${value}</div></div>`;
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>管理面板</h1><p>业务概览与到期提醒</p></div>
+        </div>
+        <div class="stats">
+          ${stat("案件总数", cc.total)}
+          ${stat("进行中", cc.active, "color:var(--accent)")}
+          ${stat("已完成", cc.completed, "color:var(--ok)")}
+          ${stat("应收费用", "¥" + yuan(ft.receivable))}
+          ${stat("实收费用", "¥" + yuan(ft.received), "color:var(--ok)")}
+          ${stat("待收费用", "¥" + yuan(ft.pending), ft.pending > 0 ? "color:var(--warn)" : "")}
+          ${stat("跟进线索", dash.activeLeads ?? 0, (dash.activeLeads ?? 0) > 0 ? "color:var(--accent)" : "")}
+        </div>
+        <div class="dash-grid">
+          <div class="panel">
+            <h3>到期提醒（30 天内 / 已逾期）</h3>
+            ${dash.upcomingDeadlines.length === 0
+              ? `<div class="empty">暂无待办期限</div>`
+              : dash.upcomingDeadlines.map((d) => `
+                <div class="list-row">
+                  <span class="badge ${d.overdue ? "b-overdue" : "b-pending"}">${d.overdue ? "已逾期" : "将到期"}</span>
+                  <div class="grow">
+                    <div class="t"><span class="ttl">${esc(d.title)}</span></div>
+                    <div class="s">${esc(d.customerName)} · ${esc(d.caseTitle)} · 截止 ${fmtDate(d.dueDate)} · ${DL_TYPE_LABEL[d.type]}</div>
+                  </div>
+                  <button class="btn btn-ghost btn-sm" onclick="toggleDeadline('${d.id}')">完成</button>
+                </div>`).join("")}
+          </div>
+          <div class="panel">
+            <h3>近期案件</h3>
+            ${dash.recentCases.length === 0
+              ? `<div class="empty">暂无案件</div>`
+              : dash.recentCases.map((c) => `
+                <div class="list-row clickable" onclick="openCaseDetail('${c.id}')">
+                  <span class="badge ${TYPE_BADGE[c.type]}">${CASE_TYPES[c.type]}</span>
+                  <div class="grow">
+                    <div class="t"><span class="ttl">${esc(c.title)}</span></div>
+                    <div class="s">${esc(c.category)} · ${STATUS_LABEL[c.status]} · ${esc(c.stage)}</div>
+                  </div>
+                </div>`).join("")}
+          </div>
+        </div>`;
+    }
+
+    // ---------- 客户（卡片列表） ----------
+    async function loadCustomers() {
+      const el = $("#view-customers .view-content");
+      const q = $("#cust-q") ? $("#cust-q").value : "";
+      const kind = $("#cust-kind") ? $("#cust-kind").value : "";
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>客户管理</h1><p>客户档案，删除客户将级联清理其案件</p></div>
+          <button class="btn btn-primary" onclick="openCustomerForm()">+ 新增客户</button>
+        </div>
+        <div class="toolbar">
+          <input id="cust-q" placeholder="搜索姓名 / 公司 / 证照号 / 经办人" value="${esc(q)}" oninput="debouncedCustomers()" />
+          <select id="cust-kind" onchange="loadCustomers()">
+            <option value="">全部主体类型</option>
+            ${Object.entries(CUST_KIND_LABEL).map(([k, v]) => `<option value="${k}" ${k === kind ? "selected" : ""}>${v}</option>`).join("")}
+          </select>
+        </div>
+        <div class="card-grid" id="cust-list"><div class="card-item" style="grid-column:1/-1"><div class="empty">加载中…</div></div></div>`;
+      const url = "/api/customers" + (q ? "?q=" + encodeURIComponent(q) : "") + (kind ? (q ? "&" : "?") + "kind=" + encodeURIComponent(kind) : "");
+      const list = await api(url);
+      $("#cust-list").innerHTML = list.length === 0
+        ? `<div class="card-item" style="grid-column:1/-1"><div class="empty">暂无客户，点击右上角新增</div></div>`
+        : list.map((c, i) => `
+          <div class="card-item" style="animation-delay:${Math.min(i, 8) * 0.04}s">
+            <div class="card-head">
+              <div class="avatar" style="background:linear-gradient(135deg,#0a84ff,${i % 2 ? "#bf5af2" : "#5e5ce6"})">${esc(initials(c.name))}</div>
+              <div class="tt"><b>${esc(c.name)}</b><span><span class="badge ${CUST_KIND_BADGE[c.kind] || "b-org"}">${CUST_KIND_LABEL[c.kind] || "公司"}</span> ${esc(c.company) || ""}</span></div>
+            </div>
+            <div class="card-body">
+              <div class="kv"><span class="k">证照号</span><span class="v">${esc(c.idNo) || "—"}</span></div>
+              <div class="kv"><span class="k">电话</span><span class="v">${esc(c.phone) || "—"}</span></div>
+              <div class="kv"><span class="k">经办人</span><span class="v">${esc(c.contactName) || "—"} ${esc(c.contactPhone) || ""}</span></div>
+              <div class="kv"><span class="k">邮箱</span><span class="v">${esc(c.contactEmail || c.email) || "—"}</span></div>
+            </div>
+            <div class="card-foot">
+              <button class="btn btn-sm" onclick="openCaseFilter('${esc(c.id)}','${esc(c.name)}')">案件</button>
+              <button class="btn btn-ghost btn-sm" onclick="openCustomerForm('${c.id}')">编辑</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteCustomer('${c.id}','${esc(c.name)}')">删除</button>
+            </div>
+          </div>`).join("");
+    }
+    let custTimer;
+    function debouncedCustomers() { clearTimeout(custTimer); custTimer = setTimeout(loadCustomers, 300); }
+
+    function custKindIdLabel() { return CUST_KIND_ID_LABEL[$("#cf-kind").value] || "证照号"; }
+
+    async function ocrCompress(file) {
+      const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("图片读取失败")); i.src = URL.createObjectURL(file); });
+      const max = 1200; let w = img.naturalWidth, h = img.naturalHeight;
+      const k = Math.min(1, max / Math.max(w, h)); w = Math.round(w * k); h = Math.round(h * k);
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+      cv.getContext("2d").drawImage(img, 0, 0, w, h);
+      return cv.toDataURL("image/jpeg", 0.85).split(",")[1];
+    }
+    function uploadOcr(type) {
+      const input = document.createElement("input");
+      input.type = "file"; input.accept = "image/*";
+      input.onchange = async () => {
+        const f = input.files && input.files[0]; if (!f) return;
+        try {
+          const b64 = await ocrCompress(f);
+          const r = await api(type === "biz" ? "/api/ocr/biz-license" : "/api/ocr/id-card", { method: "POST", body: JSON.stringify({ image: b64 }) });
+          if (type === "biz") {
+            const kind = (r.regNum || "").startsWith("92") ? "sole" : "company";
+            $("#cf-kind").value = kind;
+            document.getElementById("cf-idno-label").textContent = custKindIdLabel();
+            if (r.name) $("#cf-company").value = r.name;
+            if (r.regNum) $("#cf-idno").value = r.regNum;
+            if (r.address) $("#cf-address").value = r.address;
+            if (r.legalPerson && !$("#cf-contact-name").value) $("#cf-contact-name").value = r.legalPerson;
+            toast("营业执照识别成功，已自动填充，请核对", "ok");
+          } else {
+            $("#cf-kind").value = "individual";
+            document.getElementById("cf-idno-label").textContent = custKindIdLabel();
+            if (r.name && !$("#cf-name").value) $("#cf-name").value = r.name;
+            if (r.idNum) $("#cf-idno").value = r.idNum;
+            if (r.address) $("#cf-address").value = r.address;
+            toast("身份证识别成功，已自动填充，请核对", "ok");
+          }
+        } catch (ex) { toast(ex.message, "error"); }
+      };
+      input.click();
+    }
+
+    async function openCustomerForm(id) {
+      let c = { name: "", kind: "company", company: "", idNo: "", address: "", phone: "", email: "", contactName: "", contactPhone: "", contactEmail: "", note: "" };
+      if (id) c = await api("/api/customers/" + id);
+      const kind = CUST_KIND_LABEL[c.kind] ? c.kind : "company";
+      openModal(`
+        <h2>${id ? "编辑客户" : "新增客户"}</h2>
+        <div class="field"><label>姓名 *</label><input id="cf-name" value="${esc(c.name)}" /></div>
+        <div class="field"><label>扫描识别</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button class="btn" onclick="uploadOcr('biz')">营业执照识别</button>
+            <button class="btn" onclick="uploadOcr('id')">身份证识别</button>
+            <span class="muted" style="color:var(--text3);font-size:12.5px">上传图片自动填充证照信息</span>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>主体类型</label>
+            <select id="cf-kind" onchange="document.getElementById('cf-idno-label').textContent = custKindIdLabel()">
+              ${Object.entries(CUST_KIND_LABEL).map(([k, v]) => `<option value="${k}" ${k === kind ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field"><label>单位全称</label><input id="cf-company" value="${esc(c.company)}" placeholder="公司注册全称 / 个体户字号" /></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label id="cf-idno-label">${CUST_KIND_ID_LABEL[kind]}</label><input id="cf-idno" value="${esc(c.idNo)}" /></div>
+          <div class="field"><label>注册地址</label><input id="cf-address" value="${esc(c.address)}" /></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>电话</label><input id="cf-phone" value="${esc(c.phone)}" /></div>
+          <div class="field"><label>邮箱</label><input id="cf-email" value="${esc(c.email)}" /></div>
+        </div>
+        <div class="field"><label>经办人（公司客户对接人，用于提醒/联系）</label></div>
+        <div class="form-grid">
+          <div class="field"><label>经办人姓名</label><input id="cf-contact-name" value="${esc(c.contactName)}" /></div>
+          <div class="field"><label>经办人电话</label><input id="cf-contact-phone" value="${esc(c.contactPhone)}" /></div>
+        </div>
+        <div class="field"><label>经办人邮箱</label><input id="cf-contact-email" value="${esc(c.contactEmail)}" /></div>
+        <div class="field"><label>备注</label><textarea id="cf-note">${esc(c.note)}</textarea></div>
+        <div class="error-msg" id="cf-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitCustomer('${id || ""}')">保存</button></div>`);
+    }
+    async function submitCustomer(id) {
+      const body = {
+        name: $("#cf-name").value, kind: $("#cf-kind").value,
+        company: $("#cf-company").value, idNo: $("#cf-idno").value, address: $("#cf-address").value,
+        phone: $("#cf-phone").value, email: $("#cf-email").value,
+        contactName: $("#cf-contact-name").value, contactPhone: $("#cf-contact-phone").value, contactEmail: $("#cf-contact-email").value,
+        note: $("#cf-note").value,
+      };
+      try {
+        if (id) await api("/api/customers/" + id, { method: "PUT", body: JSON.stringify(body) });
+        else await api("/api/customers", { method: "POST", body: JSON.stringify(body) });
+        closeModal(); toast("已保存", "ok"); loadCustomers();
+      } catch (ex) { const e = $("#cf-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    async function deleteCustomer(id, name) {
+      if (!confirm(`确定删除客户「${name}」吗？其名下所有案件、费用、期限将一并删除。`)) return;
+      try {
+        const r = await api("/api/customers/" + id, { method: "DELETE" });
+        toast(`已删除，含 ${r.deletedCases} 个案件`, "ok"); loadCustomers();
+      } catch (ex) { toast(ex.message, "error"); }
+    }
+    function openCaseFilter(customerId, name) {
+      setView("cases");
+      setTimeout(() => { const sel = $("#case-customer"); if (sel) { sel.value = customerId; loadCases(); } }, 30);
+    }
+
+    // ---------- 案件（卡片列表） ----------
+    async function loadCases() {
+      const el = $("#view-cases .view-content");
+      const cur = { type: $("#case-type") ? $("#case-type").value : "", status: $("#case-status") ? $("#case-status").value : "", customerId: $("#case-customer") ? $("#case-customer").value : "", q: $("#case-q") ? $("#case-q").value : "" };
+      const customers = await api("/api/customers");
+      const params = new URLSearchParams();
+      if (cur.type) params.set("type", cur.type);
+      if (cur.status) params.set("status", cur.status);
+      if (cur.customerId) params.set("customerId", cur.customerId);
+      if (cur.q) params.set("q", cur.q);
+      const qs = params.toString();
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>业务管理</h1><p>商标 / 版权 / 法律咨询 / 注册 / 软件 / 数据服务等全流程管理</p></div>
+          <button class="btn btn-primary" onclick="openCaseForm()">+ 新增案件</button>
+        </div>
+        <div class="toolbar">
+          <input id="case-q" placeholder="搜索标题 / 申请号 / 阶段" value="${esc(cur.q)}" oninput="debouncedCases()" />
+          <select id="case-type" onchange="loadCases()">
+            <option value="">全部类型</option>
+            ${Object.entries(CASE_TYPES).map(([k, v]) => `<option value="${k}" ${cur.type===k?"selected":""}>${v}</option>`).join("")}
+          </select>
+          <select id="case-status" onchange="loadCases()">
+            <option value="">全部状态</option>
+            ${Object.entries(STATUS_LABEL).map(([k,v]) => `<option value="${k}" ${cur.status===k?"selected":""}>${v}</option>`).join("")}
+          </select>
+          <select id="case-customer" onchange="loadCases()">
+            <option value="">全部客户</option>
+            ${customers.map((c) => `<option value="${c.id}" ${cur.customerId===c.id?"selected":""}>${esc(c.name)}</option>`).join("")}
+          </select>
+        </div>
+        <div class="card-grid" id="case-list"><div class="card-item" style="grid-column:1/-1"><div class="empty">加载中…</div></div></div>`;
+      const list = await api("/api/cases" + (qs ? "?" + qs : ""));
+      const cmap = new Map(customers.map((c) => [c.id, c]));
+      $("#case-list").innerHTML = list.length === 0
+        ? `<div class="card-item" style="grid-column:1/-1"><div class="empty">暂无案件</div></div>`
+        : list.map((c, i) => `
+          <div class="card-item clickable" style="animation-delay:${Math.min(i, 8) * 0.04}s" onclick="openCaseDetail('${c.id}')">
+            <div class="card-head">
+              <span class="badge ${TYPE_BADGE[c.type]}">${CASE_TYPES[c.type]}</span>
+              <span class="badge b-${c.status}">${STATUS_LABEL[c.status]}</span>
+              <div class="tt"><b>${esc(c.title)}</b><span>${esc((cmap.get(c.customerId) || {}).name || "")}</span></div>
+            </div>
+            <div class="card-body">
+              <div class="kv"><span class="k">子类</span><span class="v">${esc(c.category)}</span></div>
+              <div class="kv"><span class="k">阶段</span><span class="v">${esc(c.stage) || "—"}</span></div>
+              <div class="kv"><span class="k">申请号</span><span class="v">${esc(c.appNo) || "—"}</span></div>
+            </div>
+          </div>`).join("");
+    }
+    let caseTimer;
+    function debouncedCases() { clearTimeout(caseTimer); caseTimer = setTimeout(loadCases, 300); }
+
+    async function openCaseForm(id) {
+      const customers = await api("/api/customers");
+      if (customers.length === 0) { toast("请先新增客户", "error"); return; }
+      let c = null;
+      if (id) c = await api("/api/cases/" + id);
+      const defType = c ? c.type : "trademark";
+      openModal(`
+        <h2>${id ? "编辑案件" : "新增案件"}</h2>
+        <div class="field"><label>客户 *</label><select id="cs-customer">
+          ${customers.map((x) => `<option value="${x.id}" ${c && c.customerId === x.id ? "selected" : ""}>${esc(x.name)}</option>`).join("")}
+        </select></div>
+        <div class="form-grid">
+          <div class="field"><label>类型 *</label><select id="cs-type" onchange="syncCategories()">
+            ${Object.entries(CASE_TYPES).map(([k, v]) => `<option value="${k}" ${defType===k?"selected":""}>${v}</option>`).join("")}
+          </select></div>
+          <div class="field"><label>子类 *</label><select id="cs-category"></select></div>
+          <div class="field full"><label>标题 *（商标名 / 作品名）</label><input id="cs-title" value="${esc(c ? c.title : "")}" /></div>
+          <div class="field"><label>申请号</label><input id="cs-appno" value="${esc(c ? c.appNo : "")}" /></div>
+          <div class="field"><label>申请日期</label><input id="cs-appdate" type="date" value="${c ? c.applyDate : ""}" /></div>
+          <div class="field"><label>状态</label><select id="cs-status">
+            ${Object.entries(STATUS_LABEL).map(([k,v]) => `<option value="${k}" ${c && c.status===k?"selected":""}>${v}</option>`).join("")}
+          </select></div>
+          <div class="field"><label>当前阶段</label><input id="cs-stage" value="${esc(c ? c.stage : "")}" /></div>
+          <div class="field full"><label>备注</label><textarea id="cs-note">${esc(c ? c.note : "")}</textarea></div>
+        </div>
+        <div class="error-msg" id="cs-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitCase('${id || ""}')">保存</button></div>`);
+      syncCategories(c ? c.category : CATEGORIES[$("#cs-type").value]?.[0]);
+    }
+    function syncCategories(selected) {
+      const type = $("#cs-type").value;
+      const cats = CATEGORIES[type] || [];
+      $("#cs-category").innerHTML = cats.map((x) => `<option ${x === selected ? "selected" : ""}>${x}</option>`).join("");
+    }
+    async function submitCase(id) {
+      const body = {
+        customerId: $("#cs-customer").value, type: $("#cs-type").value, category: $("#cs-category").value,
+        title: $("#cs-title").value, appNo: $("#cs-appno").value, applyDate: $("#cs-appdate").value,
+        status: $("#cs-status").value, stage: $("#cs-stage").value, note: $("#cs-note").value,
+      };
+      try {
+        if (id) await api("/api/cases/" + id, { method: "PUT", body: JSON.stringify(body) });
+        else await api("/api/cases", { method: "POST", body: JSON.stringify(body) });
+        closeModal(); toast("已保存", "ok"); loadCases();
+      } catch (ex) { const e = $("#cs-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    function deleteCase(id) {
+      if (!confirm("确定删除该案件？其节点、费用、期限将一并删除。")) return;
+      api("/api/cases/" + id, { method: "DELETE" }).then(() => {
+        closeDrawer(); toast("已删除", "ok"); loadCases();
+      }).catch((ex) => toast(ex.message, "error"));
+    }
+
+    // ---------- 案件详情抽屉 ----------
+    let drawerCaseId = null;
+    function openDrawer(html) { $("#drawer-body").innerHTML = html; $("#drawer-overlay").classList.add("show"); $("#drawer").classList.add("show"); }
+    function closeDrawer() { $("#drawer-overlay").classList.remove("show"); $("#drawer").classList.remove("show"); drawerCaseId = null; }
+    $("#drawer-close").addEventListener("click", closeDrawer);
+    $("#drawer-overlay").addEventListener("click", closeDrawer);
+
+    async function openCaseDetail(id) {
+      drawerCaseId = id;
+      const [cse, customers] = await Promise.all([api("/api/cases/" + id), api("/api/customers")]);
+      const cus = customers.find((x) => x.id === cse.customerId);
+      $("#drawer-title").textContent = `${cse.title} · ${CASE_TYPES[cse.type]}`;
+      openDrawer(`
+        <div class="detail-grid">
+          <div class="kv"><div class="k">客户</div><div class="v">${esc((cus || {}).name || "")}</div></div>
+          <div class="kv"><div class="k">子类</div><div class="v">${esc(cse.category)}</div></div>
+          <div class="kv"><div class="k">状态</div><div class="v"><span class="badge b-${cse.status}">${STATUS_LABEL[cse.status]}</span></div></div>
+          <div class="kv"><div class="k">当前阶段</div><div class="v">${esc(cse.stage)}</div></div>
+          <div class="kv"><div class="k">申请号</div><div class="v">${esc(cse.appNo) || "-"}</div></div>
+          <div class="kv"><div class="k">申请日期</div><div class="v">${fmtDate(cse.applyDate) || "-"}</div></div>
+          ${cse.note ? `<div class="kv" style="grid-column:1/-1"><div class="k">备注</div><div class="v">${esc(cse.note)}</div></div>` : ""}
+        </div>
+        <div class="tabs">
+          <button data-tab="info" class="active" onclick="drawerTab('info')">信息</button>
+          <button data-tab="acts" onclick="drawerTab('acts')">流程节点</button>
+          <button data-tab="fees" onclick="drawerTab('fees')">费用</button>
+          <button data-tab="dls" onclick="drawerTab('dls')">期限</button>
+        </div>
+        <div id="drawer-tab-content"></div>`);
+      drawerTab("info");
+    }
+    function drawerTab(name) {
+      const cseId = drawerCaseId;
+      if (!cseId) return;
+      $$(".tabs button").forEach((b) => b.classList.toggle("active", b.dataset.tab === name));
+      const box = $("#drawer-tab-content");
+      if (name === "info") {
+        box.innerHTML = `<div class="form-actions"><button class="btn" onclick="openCaseForm('${cseId}')">编辑案件</button><button class="btn btn-danger" onclick="deleteCase('${cseId}')">删除案件</button></div>`;
+      } else if (name === "acts") {
+        box.innerHTML = `<div class="empty">加载中…</div>`;
+        api(`/api/cases/${cseId}/activities`).then((acts) => {
+          box.innerHTML = `
+            <div class="form-actions" style="margin-bottom:14px"><button class="btn btn-primary btn-sm" onclick="openActivityForm('${cseId}')">+ 新增节点</button></div>
+            ${acts.length === 0 ? `<div class="empty">暂无节点记录</div>` :
+            `<div class="timeline">${acts.map((a) => `<div class="tl-item">
+              <div class="stage">${esc(a.stage)}</div>
+              <div class="meta">${esc(a.type)} · ${new Date(a.createdAt).toLocaleString("zh-CN")}</div>
+              <div class="content">${esc(a.content)}</div>
+            </div>`).join("")}</div>`}`;
+        }).catch((ex) => { box.innerHTML = `<div class="empty">${esc(ex.message)}</div>`; });
+      } else if (name === "fees") {
+        box.innerHTML = `<div class="empty">加载中…</div>`;
+        api(`/api/cases/${cseId}/fees`).then((fees) => {
+          box.innerHTML = `
+            <div class="form-actions" style="margin-bottom:8px"><button class="btn btn-primary btn-sm" onclick="openFeeForm('${cseId}')">+ 新增费用</button></div>
+            ${fees.length === 0 ? `<div class="empty">暂无费用记录</div>` :
+            fees.map((f) => `<div class="fee-row">
+              <div class="main">
+                <div><span class="badge b-${f.status}">${FEE_STATUS_LABEL[f.status]}</span> <b>${esc(f.name)}</b> <span class="muted" style="color:var(--text3)">${FEE_KIND_LABEL[f.kind]}</span></div>
+                <div class="amounts">应收 ¥${yuan(f.amount)} · 实收 ¥${yuan(f.received)}${f.dueDate ? ` · 到期 ${f.dueDate}` : ""}</div>
+                ${f.payments.length ? `<div class="amounts">到账明细：${f.payments.map((p) => `${p.date} ¥${yuan(p.amount)}`).join("；")}</div>` : ""}
+              </div>
+              <div class="actions">
+                <button class="btn btn-ghost btn-sm" onclick="openPayForm('${f.id}')">收款</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteFee('${f.id}')">删</button>
+              </div>
+            </div>`).join("")}`;
+        }).catch((ex) => { box.innerHTML = `<div class="empty">${esc(ex.message)}</div>`; });
+      } else if (name === "dls") {
+        box.innerHTML = `<div class="empty">加载中…</div>`;
+        api("/api/deadlines").then((dls) => {
+          const mine = dls.filter((d) => d.caseId === cseId);
+          box.innerHTML = `
+            <div class="form-actions" style="margin-bottom:8px"><button class="btn btn-primary btn-sm" onclick="openDeadlineForm('${cseId}')">+ 新增期限</button></div>
+            ${mine.length === 0 ? `<div class="empty">暂无期限</div>` :
+            mine.map((d) => `<div class="fee-row">
+              <div class="main">
+                <div><span class="badge ${d.overdue ? "b-overdue" : d.status === "done" ? "b-done" : "b-pending"}">${d.overdue ? "已逾期" : d.status === "done" ? "已完成" : "待办"}</span> <b>${esc(d.title)}</b> <span class="muted" style="color:var(--text3)">${DL_TYPE_LABEL[d.type]}</span></div>
+                <div class="amounts">截止 ${fmtDate(d.dueDate)}</div>
+              </div>
+              <div class="actions">
+                <button class="btn btn-ghost btn-sm" onclick="toggleDeadline('${d.id}')">${d.status === "done" ? "重开" : "完成"}</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteDeadline('${d.id}')">删</button>
+              </div>
+            </div>`).join("")}`;
+        }).catch((ex) => { box.innerHTML = `<div class="empty">${esc(ex.message)}</div>`; });
+      }
+    }
+
+    // ---------- 节点 ----------
+    async function openActivityForm(caseId) {
+      openModal(`
+        <h2>新增流程节点</h2>
+        <div class="field"><label>阶段</label><input id="af-stage" placeholder="如：提交申请、补正、公告" /></div>
+        <div class="field"><label>类型</label><input id="af-type" placeholder="如：申请 / 答复 / 通知" value="备注" /></div>
+        <div class="field"><label>内容 *</label><textarea id="af-content"></textarea></div>
+        <div class="error-msg" id="af-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitActivity('${caseId}')">保存</button></div>`);
+    }
+    async function submitActivity(caseId) {
+      try {
+        await api(`/api/cases/${caseId}/activities`, {
+          method: "POST",
+          body: JSON.stringify({ stage: $("#af-stage").value, type: $("#af-type").value, content: $("#af-content").value }),
+        });
+        closeModal(); toast("已记录", "ok"); drawerTab("acts");
+      } catch (ex) { const e = $("#af-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+
+    // ---------- 费用 ----------
+    async function openFeeForm(caseId) {
+      openModal(`
+        <h2>新增费用</h2>
+        <div class="field"><label>费用名称</label><input id="ff-name" placeholder="如：申请官费、代理费" /></div>
+        <div class="form-grid">
+          <div class="field"><label>类型</label><select id="ff-kind"><option value="official">官费</option><option value="agency">代理费</option></select></div>
+          <div class="field"><label>应收金额（元）</label><input id="ff-amount" type="number" min="0" step="0.01" placeholder="0.00" /></div>
+          <div class="field"><label>到期日</label><input id="ff-due" type="date" /></div>
+          <div class="field"><label>备注</label><input id="ff-note" /></div>
+        </div>
+        <div class="error-msg" id="ff-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitFee('${caseId}')">保存</button></div>`);
+    }
+    async function submitFee(caseId) {
+      const cents = toCents($("#ff-amount").value);
+      if (!Number.isFinite(cents) || cents <= 0) { const e = $("#ff-error"); e.textContent = "请输入有效的金额"; e.style.display = "block"; return; }
+      try {
+        await api(`/api/cases/${caseId}/fees`, {
+          method: "POST",
+          body: JSON.stringify({ name: $("#ff-name").value, kind: $("#ff-kind").value, amount: cents, dueDate: $("#ff-due").value, note: $("#ff-note").value }),
+        });
+        closeModal(); toast("已保存", "ok"); drawerTab("fees");
+      } catch (ex) { const e = $("#ff-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    async function openPayForm(feeId) {
+      openModal(`
+        <h2>登记收款</h2>
+        <div class="field"><label>到账日期</label><input id="pf-date" type="date" value="${today()}" /></div>
+        <div class="field"><label>金额（元）*</label><input id="pf-amount" type="number" min="0.01" step="0.01" /></div>
+        <div class="field"><label>备注</label><input id="pf-note" /></div>
+        <div class="error-msg" id="pf-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitPay('${feeId}')">保存</button></div>`);
+    }
+    async function submitPay(feeId) {
+      const cents = toCents($("#pf-amount").value);
+      if (!Number.isFinite(cents) || cents <= 0) { const e = $("#pf-error"); e.textContent = "请输入有效的金额"; e.style.display = "block"; return; }
+      try {
+        await api(`/api/fees/${feeId}/payments`, {
+          method: "POST",
+          body: JSON.stringify({ date: $("#pf-date").value, amount: cents, note: $("#pf-note").value }),
+        });
+        closeModal(); toast("已登记到账", "ok"); drawerTab("fees");
+      } catch (ex) { const e = $("#pf-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    function deleteFee(feeId) {
+      if (!confirm("确定删除该费用？")) return;
+      api("/api/fees/" + feeId, { method: "DELETE" }).then(() => { toast("已删除", "ok"); drawerTab("fees"); }).catch((ex) => toast(ex.message, "error"));
+    }
+
+    // ---------- 期限 ----------
+    async function loadDeadlines() {
+      const el = $("#view-deadlines .view-content");
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>期限提醒</h1><p>续展、官方答复、费用缴纳提醒</p></div>
+          <button class="btn btn-primary" onclick="openDeadlineForm()">+ 新增期限</button>
+        </div>
+        <div class="toolbar">
+          <select id="dl-upcoming" onchange="renderDeadlines()">
+            <option value="">全部期限</option><option value="30">30 天内 / 逾期</option><option value="7">7 天内 / 逾期</option>
+          </select>
+        </div>
+        <div id="dl-list"><div class="card-item" style="grid-column:1/-1"><div class="empty">加载中…</div></div></div>`;
+      renderDeadlines();
+    }
+    async function renderDeadlines() {
+      const box = $("#dl-list");
+      const upcoming = $("#dl-upcoming").value;
+      const dls = await api("/api/deadlines" + (upcoming ? "?upcoming=" + upcoming : ""));
+      box.innerHTML = dls.length === 0
+        ? `<div class="card-item" style="grid-column:1/-1"><div class="empty">暂无期限</div></div>`
+        : dls.map((d, i) => `
+          <div class="card-item dl-card" style="animation-delay:${Math.min(i, 8) * 0.04}s;margin-bottom:12px">
+            <div class="dl-due ${d.overdue ? "overdue" : ""}">
+              <b>${fmtDate(d.dueDate).slice(8) || "--"}</b><span>${fmtDate(d.dueDate).slice(0, 7) || ""}</span>
+            </div>
+            <div class="grow" style="flex:1;min-width:0">
+              <div class="t" style="font-weight:600;font-size:14.5px">${esc(d.title)}</div>
+              <div class="s" style="color:var(--text3);font-size:12.5px;margin-top:2px">${esc(d.customerName)} / ${esc(d.caseTitle)} · ${DL_TYPE_LABEL[d.type]}</div>
+            </div>
+            <span class="badge ${d.overdue ? "b-overdue" : d.status === "done" ? "b-done" : "b-pending"}">${d.overdue ? "已逾期" : d.status === "done" ? "已完成" : "待办"}</span>
+            <div class="actions" style="display:flex;gap:6px;flex:none">
+              <button class="btn btn-ghost btn-sm" onclick="toggleDeadline('${d.id}')">${d.status === "done" ? "重开" : "完成"}</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteDeadline('${d.id}')">删</button>
+            </div>
+          </div>`).join("");
+    }
+    async function toggleDeadline(id) {
+      try {
+        await api(`/api/deadlines/${id}/toggle`, { method: "POST" });
+        toast("已更新", "ok");
+        if (currentView === "dashboard") loadDashboard();
+        else if (currentView === "deadlines") renderDeadlines();
+        else drawerTab("dls");
+      } catch (ex) { toast(ex.message, "error"); }
+    }
+    async function deleteDeadline(id) {
+      if (!confirm("确定删除该期限？")) return;
+      try {
+        await api("/api/deadlines/" + id, { method: "DELETE" });
+        toast("已删除", "ok");
+        if (currentView === "dashboard") loadDashboard();
+        else if (currentView === "deadlines") renderDeadlines();
+        else drawerTab("dls");
+      } catch (ex) { toast(ex.message, "error"); }
+    }
+    async function openDeadlineForm(presetCaseId) {
+      const customers = await api("/api/customers");
+      const cases = await api("/api/cases");
+      if (cases.length === 0) { toast("请先新增案件", "error"); return; }
+      const cmap = new Map(customers.map((c) => [c.id, c.name]));
+      openModal(`
+        <h2>新增期限提醒</h2>
+        <div class="field"><label>案件 *</label><select id="dl-case">
+          ${cases.map((c) => `<option value="${c.id}" ${presetCaseId === c.id ? "selected" : ""}>${esc(c.title)}（${esc(cmap.get(c.customerId) || "")}）</option>`).join("")}
+        </select></div>
+        <div class="field"><label>标题 *</label><input id="dl-title" placeholder="如：续展到期日、答复截止日" /></div>
+        <div class="form-grid">
+          <div class="field"><label>类型</label><select id="dl-type">
+            <option value="renewal">续展提醒</option><option value="official_reply">官方答复</option><option value="fee">费用缴纳</option>
+          </select></div>
+          <div class="field"><label>到期日期 *</label><input id="dl-due" type="date" /></div>
+        </div>
+        <div class="field"><label>备注</label><input id="dl-note" /></div>
+        <div class="error-msg" id="dl-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitDeadline()">保存</button></div>`);
+    }
+    async function submitDeadline() {
+      try {
+        await api("/api/deadlines", {
+          method: "POST",
+          body: JSON.stringify({ caseId: $("#dl-case").value, title: $("#dl-title").value, type: $("#dl-type").value, dueDate: $("#dl-due").value, note: $("#dl-note").value }),
+        });
+        closeModal(); toast("已保存", "ok");
+        if (currentView === "deadlines") renderDeadlines(); else drawerTab("dls");
+      } catch (ex) { const e = $("#dl-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+
+    // ---------- 财务管理 ----------
+    async function loadFinance() {
+      const el = $("#view-finance .view-content");
+      const cur = { q: $("#fin-q") ? $("#fin-q").value : "", status: $("#fin-status") ? $("#fin-status").value : "" };
+      const params = new URLSearchParams();
+      if (cur.q) params.set("q", cur.q);
+      if (cur.status) params.set("status", cur.status);
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>财务管理</h1><p>全部费用与收款汇总</p></div>
+        </div>
+        <div class="toolbar">
+          <input id="fin-q" placeholder="搜索客户 / 案件 / 费用名称" value="${esc(cur.q)}" oninput="debouncedFinance()" />
+          <select id="fin-status" onchange="loadFinance()">
+            <option value="">全部状态</option>
+            ${Object.entries(FEE_STATUS_LABEL).map(([k, v]) => `<option value="${k}" ${cur.status === k ? "selected" : ""}>${v}</option>`).join("")}
+          </select>
+        </div>
+        <div class="stats" id="fin-stats"><div class="stat"><div class="label">汇总</div><div class="value">计算中…</div></div></div>
+        <div class="panel" style="overflow-x:auto">
+          <table class="tbl"><thead><tr><th>客户</th><th>案件</th><th>费用</th><th>类型</th><th>应收</th><th>实收</th><th>状态</th><th>到期日</th></tr></thead>
+          <tbody id="fin-body"></tbody></table>
+        </div>`;
+      const data = await api("/api/finance" + (params.toString() ? "?" + params : ""));
+      const s = data.summary;
+      const stat = (label, value, color = "") => `<div class="stat"><div class="label">${label}</div><div class="value" style="${color}">${value}</div></div>`;
+      $("#fin-stats").innerHTML =
+        stat("应收合计", "¥" + yuan(s.receivable)) +
+        stat("实收合计", "¥" + yuan(s.received), "color:var(--ok)") +
+        stat("待收合计", "¥" + yuan(s.pending), s.pending > 0 ? "color:var(--warn)" : "");
+      $("#fin-body").innerHTML = data.rows.length === 0
+        ? `<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:26px">暂无费用记录</td></tr>`
+        : data.rows.map((r) => `
+          <tr class="row" onclick="openCaseDetail('${r.caseId}')">
+            <td><b>${esc(r.customerName) || "—"}</b></td>
+            <td class="dl-cell">${esc(r.caseTitle) || "—"}</td>
+            <td>${esc(r.name)}</td>
+            <td class="dl-cell">${FEE_KIND_LABEL[r.kind]}</td>
+            <td>¥${yuan(r.amount)}</td>
+            <td style="color:var(--ok)">¥${yuan(r.received)}</td>
+            <td><span class="badge b-${r.status}">${FEE_STATUS_LABEL[r.status]}</span></td>
+            <td class="dl-cell">${fmtDate(r.dueDate) || "—"}</td>
+          </tr>`).join("");
+    }
+    let finTimer;
+    function debouncedFinance() { clearTimeout(finTimer); finTimer = setTimeout(loadFinance, 300); }
+
+    // ---------- 业务统计 ----------
+    async function loadStats() {
+      const el = $("#view-stats .view-content");
+      el.innerHTML = `<div class="page-head"><div><h1>业务统计</h1><p>案件分布 · 费用趋势 · 客户排名</p></div></div><div class="dash-grid"><div class="panel">加载中…</div></div>`;
+      const s = await api("/api/stats");
+      const dist = s.caseDistribution;
+      const total = Object.values(dist.byType).reduce((a, b) => a + b, 0);
+      const typeColors = ["#0a84ff", "#bf5af2", "#5e5ce6", "#ff9f0a", "#34c759", "#ff3b30", "#00c7be"];
+      const typeRows = Object.entries(dist.byType).map(([key, n], i) => {
+        const pct = total ? Math.round((n / total) * 100) : 0;
+        const label = dist.typeLabels[key] || key;
+        return `<div class="prog-row"><span class="lbl">${esc(label)}</span><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${typeColors[i % typeColors.length]}"></div></div><span class="prog-val">${n} · ${pct}%</span></div>`;
+      }).join("");
+      const maxR = Math.max(1, ...s.feeTrend.map((m) => Math.max(m.receivable, m.received)));
+      const bars = s.feeTrend.map((m) => `
+        <div class="bar-col" title="${m.label}：应收 ¥${yuan(m.receivable)} / 实收 ¥${yuan(m.received)}">
+          <div class="bar-wrap">
+            <div class="bar" style="height:${Math.max(2, (m.received / maxR) * 100)}%"></div>
+            <div class="bar rec" style="height:${Math.max(2, (m.received / maxR) * 100)}%"></div>
+          </div>
+          <div class="lb">${m.label}</div>
+        </div>`).join("");
+      const prog = (lbl, key, color = "var(--accent)") => {
+        const n = s.caseDistribution.byStatus[key];
+        const pct = total ? Math.round((n / total) * 100) : 0;
+        return `<div class="prog-row"><span class="lbl">${lbl}</span><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${color}"></div></div><span class="prog-val">${n} · ${pct}%</span></div>`;
+      };
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>业务统计</h1><p>案件分布 · 费用趋势 · 客户排名</p></div>
+        </div>
+        <div class="dash-grid">
+          <div class="panel">
+            <h3>业务类型分布（共 ${total} 件）</h3>
+            ${typeRows}
+            <h3 style="margin-top:22px">业务状态</h3>
+            ${prog("进行中", "active")}
+            ${prog("已完成", "completed", "var(--ok)")}
+            ${prog("已终止", "terminated", "var(--warn)")}
+          </div>
+          <div class="panel">
+            <h3>费用月度趋势（近 6 个月，元）</h3>
+            <div class="bar-chart">${bars}</div>
+            <div class="legend"><span><i style="background:var(--accent)"></i>应收</span><span><i style="background:var(--ok)"></i>实收</span></div>
+          </div>
+          <div class="panel" style="grid-column:1/-1">
+            <h3>客户费用排名（Top 10）</h3>
+            ${s.topCustomers.length === 0 ? `<div class="empty">暂无数据</div>` : `
+            <table class="tbl"><thead><tr><th>#</th><th>客户</th><th>案件数</th><th>应收</th><th>实收</th><th>待收</th></tr></thead><tbody>
+            ${s.topCustomers.map((r, i) => {
+              const pending = r.receivable - r.received;
+              return `<tr><td style="color:var(--text3)">${i + 1}</td><td><b>${esc(r.name)}</b></td><td class="dl-cell">${r.caseCount}</td><td>¥${yuan(r.receivable)}</td><td style="color:var(--ok)">¥${yuan(r.received)}</td><td class="dl-cell"${pending > 0 ? ` style="color:var(--warn)"` : ""}>¥${yuan(pending)}</td></tr>`;
+            }).join("")}</tbody></table>`}
+          </div>
+        </div>`;
+    }
+
+    // ---------- 销售线索 ----------
+    async function loadLeads() {
+      const el = $("#view-leads .view-content");
+      const cur = { status: $("#lead-status") ? $("#lead-status").value : "", q: $("#lead-q") ? $("#lead-q").value : "" };
+      const params = new URLSearchParams();
+      if (cur.status) params.set("status", cur.status);
+      if (cur.q) params.set("q", cur.q);
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>销售线索</h1><p>承接多业务获客，可转化为正式客户</p></div>
+          <button class="btn btn-primary" onclick="openLeadForm()">+ 新增线索</button>
+        </div>
+        <div class="toolbar">
+          <input id="lead-q" placeholder="搜索名称 / 公司 / 电话" value="${esc(cur.q)}" oninput="debouncedLeads()" />
+          <select id="lead-status" onchange="loadLeads()">
+            <option value="">全部状态</option>
+            ${Object.entries(LEAD_STATUS_LABEL).map(([k, v]) => `<option value="${k}" ${cur.status===k?"selected":""}>${v}</option>`).join("")}
+          </select>
+        </div>
+        <div class="card-grid" id="lead-list"><div class="card-item" style="grid-column:1/-1"><div class="empty">加载中…</div></div></div>`;
+      const list = await api("/api/leads" + (params.toString() ? "?" + params : ""));
+      $("#lead-list").innerHTML = list.length === 0
+        ? `<div class="card-item" style="grid-column:1/-1"><div class="empty">暂无线索</div></div>`
+        : list.map((l, i) => `
+          <div class="card-item" style="animation-delay:${Math.min(i, 8) * 0.04}s">
+            <div class="card-head">
+              <span class="badge b-${l.status === "new" ? "pending" : l.status === "won" ? "done" : l.status === "lost" ? "overdue" : "active"}">${LEAD_STATUS_LABEL[l.status] || l.status}</span>
+              <span class="badge ${LEAD_SOURCE_BADGE[l.source] || "b-org"}">${LEAD_SOURCE_LABEL[l.source] || l.source}</span>
+              <div class="tt"><b>${esc(l.name)}</b><span>${esc(l.company) || ""} ${l.businessType ? "· " + esc(CASE_TYPES[l.businessType] || l.businessType) : ""}</span></div>
+            </div>
+            <div class="card-body">
+              <div class="kv"><span class="k">电话</span><span class="v">${esc(l.phone) || "—"}</span></div>
+              <div class="kv"><span class="k">意向</span><span class="v">${esc(l.intention) || "—"}</span></div>
+              <div class="kv"><span class="k">预计金额</span><span class="v">${l.amount ? "¥" + yuan(l.amount) : "—"}</span></div>
+            </div>
+            <div class="card-foot">
+              ${l.status !== "won" && l.status !== "lost"
+                ? `<button class="btn btn-sm" onclick="convertLead('${l.id}','${esc(l.name)}')">转化为客户</button>`
+                : ""}
+              <button class="btn btn-ghost btn-sm" onclick="openLeadForm('${l.id}')">编辑</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteLead('${l.id}','${esc(l.name)}')">删除</button>
+            </div>
+          </div>`).join("");
+    }
+    let leadTimer;
+    function debouncedLeads() { clearTimeout(leadTimer); leadTimer = setTimeout(loadLeads, 300); }
+
+    async function openLeadForm(id) {
+      const customers = await api("/api/customers");
+      let l = null;
+      if (id) l = await api("/api/leads/" + id);
+      const defType = l ? l.businessType : "";
+      const defStatus = l ? l.status : "new";
+      const defSource = l ? l.source : "other";
+      openModal(`
+        <h2>${id ? "编辑线索" : "新增线索"}</h2>
+        <div class="form-grid">
+          <div class="field"><label>名称 *</label><input id="lf-name" value="${esc(l ? l.name : "")}" /></div>
+          <div class="field"><label>公司</label><input id="lf-company" value="${esc(l ? l.company : "")}" /></div>
+          <div class="field"><label>电话</label><input id="lf-phone" value="${esc(l ? l.phone : "")}" /></div>
+          <div class="field"><label>邮箱</label><input id="lf-email" value="${esc(l ? l.email : "")}" /></div>
+          <div class="field"><label>来源</label><select id="lf-source">${Object.entries(LEAD_SOURCE_LABEL).map(([k, v]) => `<option value="${k}" ${k===defSource?"selected":""}>${v}</option>`).join("")}</select></div>
+          <div class="field"><label>状态</label><select id="lf-status">${Object.entries(LEAD_STATUS_LABEL).map(([k, v]) => `<option value="${k}" ${k===defStatus?"selected":""}>${v}</option>`).join("")}</select></div>
+          <div class="field"><label>意向业务</label><select id="lf-btype"><option value="">—</option>${Object.entries(CASE_TYPES).map(([k, v]) => `<option value="${k}" ${k===defType?"selected":""}>${v}</option>`).join("")}</select></div>
+          <div class="field"><label>预计金额（元）</label><input id="lf-amount" type="number" min="0" value="${l && l.amount ? yuanInput(l.amount) : ""}" /></div>
+        </div>
+        <div class="field"><label>意向说明</label><textarea id="lf-intention" rows="2">${esc(l ? l.intention : "")}</textarea></div>
+        <div class="field"><label>备注</label><textarea id="lf-note" rows="2">${esc(l ? l.note : "")}</textarea></div>
+        ${customers.length ? `<div class="field"><label>关联客户（可选，转化时使用）</label><select id="lf-customer"><option value="">— 新建客户 —</option>${customers.map((x) => `<option value="${x.id}" ${l && l.customerId===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>` : ""}
+        <div class="error-msg" id="lf-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitLead('${id || ""}')">保存</button></div>`);
+    }
+    async function submitLead(id) {
+      const body = {
+        name: $("#lf-name").value, company: $("#lf-company").value, phone: $("#lf-phone").value, email: $("#lf-email").value,
+        source: $("#lf-source").value, status: $("#lf-status").value, businessType: $("#lf-btype").value,
+        amount: $("#lf-amount").value ? toCents($("#lf-amount").value) : 0,
+        intention: $("#lf-intention").value, note: $("#lf-note").value,
+        customerId: $("#lf-customer") ? $("#lf-customer").value : "",
+      };
+      try {
+        if (id) await api("/api/leads/" + id, { method: "PUT", body: JSON.stringify(body) });
+        else await api("/api/leads", { method: "POST", body: JSON.stringify(body) });
+        closeModal(); toast("已保存", "ok"); loadLeads();
+      } catch (ex) { const e = $("#lf-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    function deleteLead(id, name) {
+      if (!confirm(`确定删除线索「${name}」吗？`)) return;
+      api("/api/leads/" + id, { method: "DELETE" }).then(() => { toast("已删除", "ok"); loadLeads(); }).catch((ex) => toast(ex.message, "error"));
+    }
+    function convertLead(id, name) {
+      openModal(`
+        <h2>转化为客户</h2>
+        <p class="small-hint">将「${esc(name)}」转化为客户档案。可新建客户，或关联到已有客户。</p>
+        <div class="field"><label>客户姓名/名称</label><input id="cv-name" value="${esc(name)}" /></div>
+        <div class="field"><label>客户电话</label><input id="cv-phone" /></div>
+        <div class="field"><label>客户公司</label><input id="cv-company" /></div>
+        <div class="error-msg" id="cv-error"></div>
+        <div class="form-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitConvert('${id}')">转化</button></div>`);
+    }
+    async function submitConvert(id) {
+      try {
+        const r = await api("/api/leads/" + id + "/convert", { method: "POST", body: JSON.stringify({ name: $("#cv-name").value, phone: $("#cv-phone").value, company: $("#cv-company").value }) });
+        closeModal(); toast("已转化客户", "ok"); loadLeads();
+      } catch (ex) { const e = $("#cv-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+
+    // ---------- 公司信息（对外展示） ----------
+    async function loadCompany() {
+      const el = $("#view-company .view-content");
+      el.innerHTML = `<div class="page-head"><div><h1>公司信息</h1><p>对外展示电子名片</p></div><button class="btn" onclick="setView('settings'); setTimeout(() => settingsTab('company'), 60)">去配置</button></div><div class="empty">加载中…</div>`;
+      const data = await api("/api/meta/company");
+      const cp = data.company || {};
+      const ct = data.contact || {};
+      const scopeLines = String(cp.scope || "").split(/[；;,\n]/).map((x) => x.trim()).filter(Boolean);
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>公司信息</h1><p>对外展示电子名片</p></div>
+        </div>
+        <div class="dash-grid">
+          <div class="panel">
+            <h3>${esc(cp.fullName || data.siteTitle || "公司")} ${cp.shortName ? `<span class="badge b-tm">${esc(cp.shortName)}</span>` : ""}</h3>
+            ${cp.business ? `<p class="small-hint">${esc(cp.business)}</p>` : ""}
+            <div class="detail-grid" style="margin-top:14px">
+              ${cp.address ? `<div class="kv"><div class="k">地址</div><div class="v">${esc(cp.address)}</div></div>` : ""}
+              ${cp.website ? `<div class="kv"><div class="k">官网</div><div class="v"><a href="${esc(cp.website)}" target="_blank" rel="noopener">${esc(cp.website)}</a></div></div>` : ""}
+              ${cp.icp ? `<div class="kv"><div class="k">ICP 备案</div><div class="v">${esc(cp.icp)}</div></div>` : ""}
+              ${ct.phone ? `<div class="kv"><div class="k">联系电话</div><div class="v">${esc(ct.phone)} ${ct.name ? "（" + esc(ct.name) + "）" : ""}</div></div>` : ""}
+              ${ct.email ? `<div class="kv"><div class="k">邮箱</div><div class="v">${esc(ct.email)}</div></div>` : ""}
+            </div>
+          </div>
+          <div class="panel">
+            <h3>经营范围</h3>
+            ${scopeLines.length === 0
+              ? `<div class="empty">尚未配置经营范围（可在系统管理 → 公司信息配置）</div>`
+              : `<ul style="padding-left:18px;line-height:1.8">${scopeLines.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`}
+          </div>
+        </div>`;
+    }
+
+    // ---------- 操作日志 ----------
+    async function loadLogs() {
+      const el = $("#view-logs .view-content");
+      el.innerHTML = `
+        <div class="page-head">
+          <div><h1>操作日志</h1><p>记录登录与全部写操作</p></div>
+          <button class="btn btn-danger" onclick="clearLogs()">清空日志</button>
+        </div>
+        <div class="toolbar">
+          <select id="log-limit" onchange="renderLogs()">
+            <option value="50">最近 50 条</option><option value="100" selected>最近 100 条</option><option value="200">最近 200 条</option>
+          </select>
+        </div>
+        <div class="panel" id="log-list"><div class="empty">加载中…</div></div>`;
+      renderLogs();
+    }
+    async function renderLogs() {
+      const box = $("#log-list");
+      if (!box) return;
+      const limit = $("#log-limit").value;
+      const logs = await api("/api/logs?limit=" + limit);
+      box.innerHTML = logs.length === 0
+        ? `<div class="empty">暂无日志</div>`
+        : `<div class="list-col">${logs.map((l) => `
+          <div class="list-row">
+            <span class="badge b-log-${l.module}">${esc(l.module)}</span>
+            <span class="badge b-pending">${esc(l.action)}</span>
+            <div class="grow">
+              <div class="t"><span class="ttl">${esc(l.detail)}</span></div>
+              <div class="s">${esc(l.operator)} · ${new Date(l.createdAt).toLocaleString("zh-CN")}</div>
+            </div>
+          </div>`).join("")}</div>`;
+    }
+    async function clearLogs() {
+      if (!confirm("确定清空全部操作日志？此操作本身也会被记录。")) return;
+      try { await api("/api/logs", { method: "DELETE" }); toast("已清空", "ok"); renderLogs(); }
+      catch (ex) { toast(ex.message, "error"); }
+    }
+
+    // ---------- 系统管理 ----------
+    let settingsCache = null;
+    async function loadSettings() {
+      const el = $("#view-settings .view-content");
+      el.innerHTML = `<div class="page-head"><div><h1>系统管理</h1><p>系统标题 · 联系人 · 备份 · 导出 · 通知配置</p></div></div><div class="empty">加载中…</div>`;
+      settingsCache = await api("/api/settings");
+      const tabs = `<div class="tabs" id="set-tabs">
+        <button data-set="title" class="active" onclick="settingsTab('title')">系统标题</button>
+        <button data-set="contact" onclick="settingsTab('contact')">联系人</button>
+        <button data-set="company" onclick="settingsTab('company')">公司信息</button>
+        <button data-set="backup" onclick="settingsTab('backup')">数据备份</button>
+        <button data-set="export" onclick="settingsTab('export')">导出</button>
+        <button data-set="smtp" onclick="settingsTab('smtp')">通知配置</button>
+        <button data-set="ocr" onclick="settingsTab('ocr')">腾讯云 OCR</button>
+      </div><div id="set-box"></div>`;
+      el.innerHTML = `
+        <div class="page-head"><div><h1>系统管理</h1><p>系统标题 · 联系人 · 备份 · 导出 · 通知配置</p></div></div>
+        ${tabs}`;
+      settingsTab("title");
+    }
+    function settingsTab(name) {
+      if (!settingsCache) return;
+      $$("#set-tabs button").forEach((b) => b.classList.toggle("active", b.dataset.set === name));
+      const box = $("#set-box");
+      const s = settingsCache;
+      if (name === "title") {
+        box.innerHTML = `
+          <div class="panel" style="max-width:640px">
+            <h3>系统标题</h3>
+            <div class="field"><label>页面标题</label><input id="set-title" value="${esc(s.siteTitle)}" /></div>
+            <div class="small-hint">显示在浏览器标签与品牌区域。</div>
+            <div class="error-msg" id="set-title-error"></div>
+            <div class="form-actions" style="margin-top:14px"><button class="btn btn-primary" onclick="saveTitle()">保存</button></div>
+          </div>`;
+      } else if (name === "contact") {
+        box.innerHTML = `
+          <div class="set-grid">
+            <div class="panel">
+              <h3>联系人信息</h3>
+              <div class="field"><label>姓名</label><input id="ct-name" value="${esc(s.contact.name)}" /></div>
+              <div class="field"><label>公司 / 机构</label><input id="ct-company" value="${esc(s.contact.company)}" /></div>
+              <div class="field"><label>电话</label><input id="ct-phone" value="${esc(s.contact.phone)}" /></div>
+              <div class="field"><label>邮箱</label><input id="ct-email" value="${esc(s.contact.email)}" /></div>
+              <div class="error-msg" id="ct-error"></div>
+              <div class="form-actions" style="margin-top:14px"><button class="btn btn-primary" onclick="saveContact()">保存</button></div>
+            </div>
+          </div>`;
+      } else if (name === "company") {
+        const cp = s.company || {};
+        box.innerHTML = `
+          <div class="panel" style="max-width:720px">
+            <h3>公司信息（对外展示）</h3>
+            <p class="small-hint">用于「公司信息」页对外展示您的经营范围与联系方式（电子名片）。</p>
+            <div class="field"><label>公司全称</label><input id="cp-full" value="${esc(cp.fullName)}" placeholder="喀什财运商标代理有限责任公司" /></div>
+            <div class="field"><label>简称</label><input id="cp-short" value="${esc(cp.shortName)}" /></div>
+            <div class="field"><label>地址</label><input id="cp-address" value="${esc(cp.address)}" /></div>
+            <div class="field full"><label>主营业务简介</label><textarea id="cp-business" rows="2">${esc(cp.business)}</textarea></div>
+            <div class="field full"><label>经营范围</label><textarea id="cp-scope" rows="6">${esc(cp.scope)}</textarea></div>
+            <div class="form-grid">
+              <div class="field"><label>官网</label><input id="cp-website" value="${esc(cp.website)}" /></div>
+              <div class="field"><label>ICP 备案号</label><input id="cp-icp" value="${esc(cp.icp)}" /></div>
+            </div>
+            <div class="error-msg" id="cp-error"></div>
+            <div class="form-actions" style="margin-top:14px"><button class="btn btn-primary" onclick="saveCompany()">保存</button></div>
+          </div>`;
+      } else if (name === "backup") {
+        box.innerHTML = `
+          <div class="set-grid">
+            <div class="panel">
+              <h3>数据备份</h3>
+              <p class="small-hint">将全量数据（客户、案件、节点、费用、期限、设置）导出为 JSON 文件保存；也可从备份文件恢复。</p>
+              <div class="form-actions" style="margin-top:16px">
+                <button class="btn btn-primary" onclick="doBackup()">导出备份（JSON）</button>
+                <label class="btn" style="cursor:pointer">恢复备份<input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="doRestore(this)" /></label>
+              </div>
+              <div class="small-hint" id="backup-meta"></div>
+            </div>
+            <div class="panel">
+              <h3>Turso 云端备份</h3>
+              <p class="small-hint">将全量数据以快照形式推送到 Turso 云端数据库（每日 02:00 自动执行）；也可手动备份或从最新快照恢复。</p>
+              <div class="form-actions" style="margin-top:16px">
+                <button class="btn" onclick="tursoPush()">立即备份到云端</button>
+                <button class="btn" onclick="tursoRestore()" style="margin-left:8px">从云端恢复</button>
+              </div>
+              <div class="small-hint" id="turso-result"></div>
+              <div class="small-hint" id="turso-snaps"></div>
+            </div>
+          </div>`;
+        api("/api/backup/meta").then((m) => {
+          $("#backup-meta").textContent = `当前数据：客户 ${m.customers} · 案件 ${m.cases} · 节点 ${m.activities} · 费用 ${m.fees} · 期限 ${m.deadlines} · 线索 ${m.leads ?? 0}`;
+        }).catch(() => {});
+        loadTursoStatus();
+      } else if (name === "export") {
+        box.innerHTML = `
+          <div class="panel">
+            <h3>导出（CSV）</h3>
+            <p class="small-hint">按模块导出 CSV，可用 Excel / WPS 打开（中文表头）。</p>
+            <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-top:16px">
+              <button class="card-item" style="background:transparent;box-shadow:none;border:1px solid var(--border2);border-radius:var(--r-md);padding:16px;text-align:center" onclick="download('/api/export/customers')">客户</button>
+              <button class="card-item" style="background:transparent;box-shadow:none;border:1px solid var(--border2);border-radius:var(--r-md);padding:16px;text-align:center" onclick="download('/api/export/cases')">案件</button>
+              <button class="card-item" style="background:transparent;box-shadow:none;border:1px solid var(--border2);border-radius:var(--r-md);padding:16px;text-align:center" onclick="download('/api/export/activities')">流程节点</button>
+              <button class="card-item" style="background:transparent;box-shadow:none;border:1px solid var(--border2);border-radius:var(--r-md);padding:16px;text-align:center" onclick="download('/api/export/fees')">费用</button>
+              <button class="card-item" style="background:transparent;box-shadow:none;border:1px solid var(--border2);border-radius:var(--r-md);padding:16px;text-align:center" onclick="download('/api/export/deadlines')">期限</button>
+              <button class="card-item" style="background:transparent;box-shadow:none;border:1px solid var(--border2);border-radius:var(--r-md);padding:16px;text-align:center" onclick="download('/api/export/leads')">销售线索</button>
+            </div>
+          </div>`;
+      } else if (name === "smtp") {
+        const sm = s.smtp;
+        const defaultTo = esc(s.contact.email);
+        box.innerHTML = `
+          <div class="panel" style="max-width:680px">
+            <h3>通知配置（SMTP）</h3>
+            <p class="small-hint">配置 QQ 邮箱 / 企业邮箱 SMTP 后，可发送到期提醒邮件与测试邮件。每日 09:00 自动扫描期限并发送提醒。</p>
+            <div class="form-grid">
+              <div class="field full"><label>服务器地址</label><input id="sm-host" value="${esc(sm.host)}" placeholder="smtp.qq.com" /></div>
+              <div class="field"><label>端口</label><input id="sm-port" type="number" value="${sm.port}" /></div>
+              <div class="field"><label>加密</label><select id="sm-secure"><option value="true" ${sm.secure ? "selected" : ""}>SSL / TLS（465）</option><option value="false" ${!sm.secure ? "selected" : ""}>STARTTLS（587）</option></select></div>
+              <div class="field"><label>用户名</label><input id="sm-user" value="${esc(sm.username)}" autocomplete="off" /></div>
+              <div class="field"><label>密码 / 授权码</label><input id="sm-pass" type="password" value="${esc(sm.password)}" autocomplete="new-password" /></div>
+              <div class="field full"><label>发件人地址</label><input id="sm-from" value="${esc(sm.from)}" placeholder="xxx@qq.com" /></div>
+              <div class="field full"><label class="switch-label"><input type="checkbox" id="sm-enabled" ${sm.enabled ? "checked" : ""} /> 启用通知配置</label></div>
+            </div>
+            <div class="error-msg" id="sm-error"></div>
+            <div class="small-hint" id="sm-result"></div>
+            <div class="form-actions" style="margin-top:14px">
+              <button class="btn" onclick="testSmtp()">测试连接</button>
+              <button class="btn btn-primary" onclick="saveSmtp()">保存配置</button>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--border2);margin:18px 0" />
+            <h3 style="margin-bottom:6px">邮件功能</h3>
+            <div class="form-grid">
+              <div class="field full"><label>收件地址</label><input id="sm-to" value="${defaultTo}" placeholder="收件邮箱（默认取联系人邮箱）" /></div>
+            </div>
+            <div class="form-actions" style="margin-top:12px">
+              <button class="btn" onclick="sendTestMail()">发送测试邮件</button>
+              <button class="btn" onclick="runReminders()" style="margin-left:8px">立即发送到期提醒</button>
+            </div>
+            <div class="small-hint" id="sm-mail-result"></div>
+          </div>`;
+      } else if (name === "ocr") {
+        let ocr = { secretId: "", secretKey: "", region: "ap-guangzhou", enabled: false };
+        try { ocr = await api("/api/settings/ocr"); } catch (ex) { /* 忽略，使用默认 */ }
+        box.innerHTML = `
+          <div class="panel" style="max-width:640px">
+            <h3>腾讯云 OCR 配置</h3>
+            <p class="small-hint">用于「客户管理 → 识别证照」功能，自动识别营业执照 / 身份证并回填客户信息。需腾讯云账号的 SecretId / SecretKey（访问管理 → API 密钥）。</p>
+            <div class="form-grid">
+              <div class="field full"><label>SecretId</label><input id="ocr-id" value="${esc(ocr.secretId)}" placeholder="AKID..." autocomplete="off" /></div>
+              <div class="field full"><label>SecretKey</label><input id="ocr-key" type="password" value="${esc(ocr.secretKey)}" placeholder="留空表示不修改" autocomplete="new-password" /></div>
+              <div class="field"><label>地域</label><input id="ocr-region" value="${esc(ocr.region || "ap-guangzhou")}" placeholder="ap-guangzhou" /></div>
+              <div class="field full"><label class="switch-label"><input type="checkbox" id="ocr-enabled" ${ocr.enabled ? "checked" : ""} /> 启用 OCR 识别</label></div>
+            </div>
+            <div class="error-msg" id="ocr-error"></div>
+            <div class="small-hint" id="ocr-result"></div>
+            <div class="form-actions" style="margin-top:14px">
+              <button class="btn btn-primary" onclick="saveOcr()">保存配置</button>
+            </div>
+          </div>`;
+      }
+    }
+    async function saveTitle() {
+      const title = $("#set-title").value.trim();
+      if (!title) { const e = $("#set-title-error"); e.textContent = "标题不能为空"; e.style.display = "block"; return; }
+      try {
+        settingsCache = await api("/api/settings", { method: "PUT", body: JSON.stringify({ siteTitle: title }) });
+        document.title = title; toast("已保存", "ok");
+      } catch (ex) { const e = $("#set-title-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    async function saveContact() {
+      try {
+        settingsCache = await api("/api/settings", { method: "PUT", body: JSON.stringify({
+          contact: { name: $("#ct-name").value, company: $("#ct-company").value, phone: $("#ct-phone").value, email: $("#ct-email").value },
+        }) });
+        toast("已保存", "ok");
+      } catch (ex) { const e = $("#ct-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    async function saveCompany() {
+      try {
+        settingsCache = await api("/api/settings", { method: "PUT", body: JSON.stringify({
+          company: {
+            fullName: $("#cp-full").value, shortName: $("#cp-short").value, address: $("#cp-address").value,
+            business: $("#cp-business").value, scope: $("#cp-scope").value,
+            website: $("#cp-website").value, icp: $("#cp-icp").value, logo: "",
+          },
+        }) });
+        toast("已保存", "ok");
+      } catch (ex) { const e = $("#cp-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    async function doBackup() {
+      try {
+        await download("/api/backup/export");
+        toast("已导出备份", "ok");
+      } catch (ex) { toast(ex.message, "error"); }
+    }
+    async function doRestore(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      if (!confirm("恢复备份将覆盖当前全部数据，确定继续？")) { input.value = ""; return; }
+      try {
+        const data = JSON.parse(await file.text());
+        await api("/api/backup/restore", { method: "POST", body: JSON.stringify(data) });
+        toast("恢复成功", "ok");
+        input.value = "";
+        settingsTab("backup");
+      } catch (ex) { toast(ex.message || "备份文件无效", "error"); input.value = ""; }
+    }
+    function smtpPayload() {
+      return {
+        host: $("#sm-host").value, port: Number($("#sm-port").value) || (($("#sm-secure").value === "true") ? 465 : 587),
+        username: $("#sm-user").value, password: $("#sm-pass").value, from: $("#sm-from").value,
+        secure: $("#sm-secure").value === "true", enabled: $("#sm-enabled").checked,
+      };
+    }
+    async function testSmtp() {
+      const box = $("#sm-result");
+      box.textContent = "测试中…";
+      try {
+        const r = await api("/api/settings/test-smtp", { method: "POST", body: JSON.stringify({ smtp: smtpPayload() }) });
+        box.textContent = r.message;
+        box.style.color = r.ok ? "var(--ok)" : "var(--danger)";
+      } catch (ex) { box.textContent = ex.message; box.style.color = "var(--danger)"; }
+    }
+    async function saveSmtp() {
+      try {
+        settingsCache = await api("/api/settings", { method: "PUT", body: JSON.stringify({ smtp: smtpPayload() }) });
+        toast("已保存", "ok");
+      } catch (ex) { const e = $("#sm-error"); e.textContent = ex.message; e.style.display = "block"; }
+    }
+    async function saveOcr() {
+      const e = $("#ocr-error");
+      if (e) { e.textContent = ""; e.style.display = "none"; }
+      const id = $("#ocr-id").value.trim();
+      const key = $("#ocr-key").value;
+      if (!id) { e.textContent = "SecretId 不能为空"; e.style.display = "block"; return; }
+      const box = $("#ocr-result");
+      box.textContent = "保存中…"; box.style.color = "var(--text3)";
+      try {
+        const r = await api("/api/settings/ocr", { method: "PUT", body: JSON.stringify({
+          secretId: id,
+          secretKey: key,
+          region: $("#ocr-region").value.trim() || "ap-guangzhou",
+          enabled: $("#ocr-enabled").checked,
+        }) });
+        box.textContent = r.enabled ? "已保存并启用" : "已保存（未启用）";
+        box.style.color = "var(--ok)";
+        toast("已保存", "ok");
+      } catch (ex) { box.textContent = ex.message; box.style.color = "var(--danger)"; }
+    }
+    async function sendTestMail() {
+      const box = $("#sm-mail-result");
+      const to = ($("#sm-to") && $("#sm-to").value.trim()) || "";
+      box.textContent = "发送中…"; box.style.color = "var(--text3)";
+      try {
+        const r = await api("/api/settings/send-test", { method: "POST", body: JSON.stringify({ to }) });
+        box.textContent = r.message; box.style.color = r.ok ? "var(--ok)" : "var(--danger)";
+      } catch (ex) { box.textContent = ex.message; box.style.color = "var(--danger)"; }
+    }
+    async function runReminders() {
+      const box = $("#sm-mail-result");
+      if (confirm("立即扫描待办期限并向收件邮箱发送到期提醒？")) {
+        box.textContent = "扫描并发送中…"; box.style.color = "var(--text3)";
+        try {
+          const r = await api("/api/settings/reminders-run", { method: "POST" });
+          box.textContent = r.message; box.style.color = r.ok ? "var(--ok)" : "var(--danger)";
+        } catch (ex) { box.textContent = ex.message; box.style.color = "var(--danger)"; }
+      }
+    }
+    async function loadTursoStatus() {
+      const box = $("#turso-result");
+      const snaps = $("#turso-snaps");
+      try {
+        const st = await api("/api/backup/turso/status");
+        if (!st.configured) {
+          box.textContent = "未配置 Turso（缺少 TURSO_URL / TURSO_AUTH_TOKEN 环境变量）";
+          box.style.color = "var(--warn)"; return;
+        }
+        if (st.error) { box.textContent = "云端连接失败：" + st.error; box.style.color = "var(--danger)"; }
+        else box.textContent = "Turso 已配置 ✓";
+        renderTursoSnaps(st.snapshots || []);
+      } catch (ex) { box.textContent = "状态查询失败：" + ex.message; box.style.color = "var(--danger)"; }
+    }
+    function renderTursoSnaps(list) {
+      const el = $("#turso-snaps");
+      if (!list.length) { el.textContent = "云端暂无备份快照"; return; }
+      el.innerHTML = "云端快照：" + list.map((s) =>
+        `<span style="display:inline-block;margin:4px 6px 0 0;padding:2px 8px;background:var(--border2);border-radius:10px;font-size:12px">` +
+        `${new Date(s.createdAt).toLocaleString("zh-CN")} · 客户 ${s.counts.customers} / 案件 ${s.counts.cases}</span>`
+      ).join("");
+    }
+    async function tursoPush() {
+      const box = $("#turso-result");
+      box.textContent = "备份中…"; box.style.color = "var(--text3)";
+      try {
+        const r = await api("/api/backup/turso/push", { method: "POST" });
+        box.textContent = "已备份到云端 ✓"; box.style.color = "var(--ok)";
+        loadTursoStatus();
+      } catch (ex) { box.textContent = ex.message; box.style.color = "var(--danger)"; }
+    }
+    async function tursoRestore() {
+      if (!confirm("从云端最新快照恢复将覆盖当前全部数据，确定继续？")) return;
+      const box = $("#turso-result");
+      box.textContent = "恢复中…"; box.style.color = "var(--text3)";
+      try {
+        await api("/api/backup/turso/restore", { method: "POST" });
+        box.textContent = "已从云端恢复 ✓"; box.style.color = "var(--ok)";
+        settingsTab("backup");
+      } catch (ex) { box.textContent = ex.message; box.style.color = "var(--danger)"; }
+    }
+
+    // ---------- 启动 ----------
+    async function checkSession() {
+      try {
+        const me = await api("/api/me");
+        showApp(me.username);
+        setView("dashboard");
+      } catch (_) { /* 保持登录页 */ }
+    }
+    checkSession();
+  </script>
+</body>
+</html>

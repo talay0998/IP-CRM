@@ -1,0 +1,18 @@
+{
+  "project": "ip-crm",
+  "updated": "2026-08-04",
+  "links": [
+    { "from": "URD-REQ-001", "to": ["ADD-FR-001", "MDD-MOD-003", "TDD-TEST-001", "RMD-TASK-003"] },
+    { "from": "URD-REQ-002", "to": ["ADD-FR-001", "TDD-TEST-028"] },
+    { "from": "URD-REQ-003", "to": ["ADD-FR-002", "MDD-MOD-003", "TDD-TEST-006", "RMD-TASK-004"] },
+    { "from": "URD-REQ-008", "to": ["ADD-FR-003", "TDD-TEST-012"] },
+    { "from": "URD-REQ-010", "to": ["ADD-FR-005", "MDD-MOD-003", "TDD-TEST-015", "RMD-TASK-005"] },
+    { "from": "URD-REQ-012", "to": ["ADD-FR-005", "TDD-TEST-017", "URD-DEC-001"] },
+    { "from": "URD-REQ-014", "to": ["ADD-FR-006", "MDD-MOD-003", "TDD-TEST-021", "RMD-TASK-006"] },
+    { "from": "URD-REQ-017", "to": ["ADD-FR-007", "TDD-TEST-025", "RMD-TASK-008"] },
+    { "from": "URD-REQ-018", "to": ["ADD-FR-008", "MDD-MOD-006", "MDD-API-001", "TDD-TEST-029", "RMD-TASK-002"] },
+    { "from": "URD-REQ-019", "to": ["ADD-FR-008", "TDD-TEST-031"] },
+    { "from": "URD-REQ-020", "to": ["ADD-FR-008", "URD-CON-005", "URD-DEC-003"] },
+    { "from": "ADD-COUP-001", "to": ["MDD-MOD-003", "TDD-TEST-028"] }
+  ]
+}
