@@ -1,0 +1,7 @@
+.local/
+*.log
+.env
+.DS_Store
+data/
+*.sqlite
+*.sqlite-journal
