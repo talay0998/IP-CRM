@@ -1,0 +1,19 @@
+{
+  "imports": {
+    "hono": "jsr:@hono/hono@^4",
+    "hono/deno": "jsr:@hono/hono@^4/deno",
+    "@libsql/client/web": "npm:@libsql/client@^0.5/web"
+  },
+  "tasks": {
+    "dev": "deno run --watch --unstable-kv --unstable-cron --env-file=.env --allow-net --allow-read --allow-write --allow-env main.ts",
+    "start": "deno run --unstable-kv --unstable-cron --env-file=.env --allow-net --allow-read --allow-write --allow-env main.ts",
+    "test": "deno test --unstable-kv --allow-net --allow-read --allow-write --allow-env tests/",
+    "check": "deno check main.ts src/ tests/"
+  },
+  "deploy": {
+    "org": "talay0998",
+    "project": "ip-crm",
+    "entrypoint": "main.ts",
+    "include": ["main.ts", "src/**", "public/**"]
+  }
+}
